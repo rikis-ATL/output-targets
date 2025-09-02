@@ -16,6 +16,8 @@ import { createAngularComponentDefinition, createComponentTypeDefinition } from 
 import { generateAngularDirectivesFile } from './generate-angular-directives-file';
 import generateValueAccessors from './generate-value-accessors';
 import { generateAngularModuleForComponent } from './generate-angular-modules';
+import { generateIndividualComponents } from './generate-individual-components';
+import { generateTreeShakingExportScript, updatePackageJsonForTreeShaking } from './generate-tree-shaking-exports';
 
 export async function angularDirectiveProxyOutput(
   compilerCtx: CompilerCtx,
@@ -23,22 +25,67 @@ export async function angularDirectiveProxyOutput(
   components: ComponentCompilerMeta[],
   config: Config
 ) {
+  // Validate and enforce tree-shaking configuration
+  if (outputTarget.enableTreeShaking) {
+    validateTreeShakingConfig(outputTarget, config);
+  }
+
   const filteredComponents = getFilteredComponents(outputTarget.excludeComponents, components);
   const rootDir = config.rootDir as string;
   const pkgData = await readPackageJson(config, rootDir);
 
   const finalText = generateProxies(filteredComponents, pkgData, outputTarget, config.rootDir as string);
 
-  await Promise.all([
+  const baseGenerationPromises = [
     compilerCtx.fs.writeFile(outputTarget.directivesProxyFile, finalText),
     copyResources(config, outputTarget),
     generateAngularDirectivesFile(compilerCtx, filteredComponents, outputTarget),
     generateValueAccessors(compilerCtx, filteredComponents, outputTarget, config),
-  ]);
+  ];
+
+  // Add tree-shaking specific generation if enabled
+  const treeShakingPromises = outputTarget.enableTreeShaking
+    ? [
+        generateIndividualComponents(compilerCtx, filteredComponents, outputTarget),
+        generateTreeShakingExportScript(compilerCtx, filteredComponents, outputTarget),
+        updatePackageJsonForTreeShaking(compilerCtx, outputTarget),
+      ]
+    : [];
+
+  await Promise.all([...baseGenerationPromises, ...treeShakingPromises]);
 }
 
 function getFilteredComponents(excludeComponents: string[] = [], cmps: ComponentCompilerMeta[]) {
   return sortBy(cmps, (cmp) => cmp.tagName).filter((c) => !excludeComponents.includes(c.tagName) && !c.internal);
+}
+
+/**
+ * Validates the configuration when tree-shaking is enabled
+ */
+function validateTreeShakingConfig(outputTarget: OutputTargetAngular, config: Config) {
+  // Check if dist-custom-elements output target is configured
+  const hasCustomElementsOutput = config.outputTargets?.some(
+    (target) => target.type === 'dist-custom-elements'
+  );
+
+  if (!hasCustomElementsOutput) {
+    throw new Error(
+      'enableTreeShaking requires a "dist-custom-elements" output target to be configured. ' +
+      'Add { type: "dist-custom-elements", customElementsExportBehavior: "single-export-module" } ' +
+      'to your outputTargets array in stencil.config.ts'
+    );
+  }
+
+  // Auto-fix outputType to standalone for optimal tree-shaking
+  if (outputTarget.outputType && outputTarget.outputType !== 'standalone') {
+    // Automatically set to standalone - tree-shaking requires this configuration
+    outputTarget.outputType = 'standalone';
+  }
+
+  // Set default customElementsDir if not provided
+  if (!outputTarget.customElementsDir) {
+    outputTarget.customElementsDir = 'components';
+  }
 }
 
 async function copyResources(config: Config, outputTarget: OutputTargetAngular) {

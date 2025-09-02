@@ -34,6 +34,22 @@ export interface OutputTargetAngular {
    * to type-check and show jsdocs when using the components in html-templates.
    */
   inlineProperties?: boolean;
+  /**
+   * Enable tree-shaking support with individual component exports.
+   * When true, automatically:
+   * - Generates individual component files for optimal bundle sizes
+   * - Creates post-build script for package.json subpath exports
+   * - Sets up barrel exports for tree-shaking
+   * - Enforces standalone components (sets outputType to 'standalone')
+   * @default false
+   */
+  enableTreeShaking?: boolean;
+  /**
+   * Optional: Custom path for individual component exports when tree-shaking is enabled.
+   * Path is relative to the Angular library root.
+   * @default './lib/components'
+   */
+  treeShakingDir?: string;
 }
 
 export type ValueAccessorTypes = 'text' | 'radio' | 'select' | 'number' | 'boolean';
