@@ -1,6 +1,7 @@
 import type { Config, OutputTargetCustom } from '@stencil/core/internal';
 import { OutputTypes, normalizePath } from './utils';
 import { angularDirectiveProxyOutput } from './output-angular';
+import { generateSecondaryEntryPoints } from './generate-secondary-entry-points';
 import type { OutputTargetAngular } from './types';
 import path from 'path';
 
@@ -16,7 +17,13 @@ export const angularOutputTarget = (outputTarget: OutputTargetAngular): OutputTa
     async generator(config, compilerCtx, buildCtx) {
       const timespan = buildCtx.createTimeSpan(`generate angular proxies started`, true);
 
+      // Generate main components file (bulk import)
       await angularDirectiveProxyOutput(compilerCtx, validatedOutputTarget, buildCtx.components, config);
+
+      // Generate secondary entry points for individual component imports (Angular Material style)
+      if (validatedOutputTarget.individualComponentExport) {
+        await generateSecondaryEntryPoints(compilerCtx, buildCtx.components, validatedOutputTarget);
+      }
 
       timespan.finish(`generate angular proxies finished`);
     },

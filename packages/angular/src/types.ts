@@ -25,9 +25,19 @@ export interface OutputTargetAngular {
    * The type of output that should be generated.
    * - `component` - Generate many component wrappers tied to a single Angular module (lazy/hydrated approach).
    * - `scam` - Generate a Single Component Angular Module for each component.
-   * - `standalone` - (default) Generates standalone components with automatic tree-shaking support.
+   * - `standalone` - (default) Generates standalone components.
    */
   outputType?: OutputType;
+  /**
+   * When true, generates individual component files alongside the bulk export
+   * to enable tree-shaking and optimal bundle sizes.
+   * 
+   * - false (default): Only generate bulk components.ts file
+   * - true: Generate both bulk components.ts AND individual component files
+   * 
+   * @default false
+   */
+  individualComponentExport?: boolean;
   /**
    * Experimental (!)
    * When true, tries to inline the properties of components. This is required to enable Angular Language Service

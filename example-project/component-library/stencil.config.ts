@@ -60,17 +60,9 @@ export const config: Config = {
   namespace: 'component-library',
   taskQueue: 'async',
   outputTargets: [
-    angularOutputTarget({
-      componentCorePackage: 'component-library',
-      outputType: 'standalone', // Enables tree-shaking with individual component exports
-      directivesProxyFile: '../component-library-angular/projects/library/src/proxies.ts',
-      valueAccessorConfigs: angularValueAccessorBindings
-    }),
-    reactOutputTarget({
-      outDir: '../component-library-react/src',
-      hydrateModule: 'component-library/hydrate',
-      clientModule: 'component-library-react',
-      serializeShadowRoot: { scoped: ['my-counter'], default: 'declarative-shadow-dom' }
+
+    
+    
     }),
     vueOutputTarget({
       includeImportCustomElements: true,

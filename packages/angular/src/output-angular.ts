@@ -1,4 +1,8 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import type { CompilerCtx, ComponentCompilerMeta, ComponentCompilerProperty, Config } from '@stencil/core/internal';
 import type { ComponentInputProperty, OutputTargetAngular, PackageJSON } from './types';
 import {
@@ -17,7 +21,6 @@ import { generateAngularDirectivesFile } from './generate-angular-directives-fil
 import generateValueAccessors from './generate-value-accessors';
 import { generateAngularModuleForComponent } from './generate-angular-modules';
 import { generateIndividualComponents } from './generate-individual-components';
-import { generateSecondaryEntryPoints } from './generate-secondary-entry-points';
 
 export async function angularDirectiveProxyOutput(
   compilerCtx: CompilerCtx,
@@ -25,35 +28,31 @@ export async function angularDirectiveProxyOutput(
   components: ComponentCompilerMeta[],
   config: Config
 ) {
-  // Angular output target implementation
-  
-  // Validate standalone configuration if needed
-  if (outputTarget.outputType === 'standalone') {
-    validateStandaloneConfig(outputTarget, config);
+  // Validate configuration if individual component export is enabled
+  if (outputTarget.individualComponentExport) {
+    validateIndividualComponentConfig(outputTarget, config);
   }
 
   const filteredComponents = getFilteredComponents(outputTarget.excludeComponents, components);
   const rootDir = config.rootDir as string;
   const pkgData = await readPackageJson(config, rootDir);
 
-  const finalText = generateProxies(filteredComponents, pkgData, outputTarget, config.rootDir as string);
-
   const baseGenerationPromises = [
-    compilerCtx.fs.writeFile(outputTarget.directivesProxyFile, finalText),
     copyResources(config, outputTarget),
     generateAngularDirectivesFile(compilerCtx, filteredComponents, outputTarget),
     generateValueAccessors(compilerCtx, filteredComponents, outputTarget, config),
   ];
 
-  // Generate individual component files for standalone mode (automatic tree-shaking)
-  const standalonePromises = outputTarget.outputType === 'standalone'
-    ? [
-        generateIndividualComponents(compilerCtx, filteredComponents, outputTarget),
-        generateSecondaryEntryPoints(compilerCtx, filteredComponents, outputTarget)
-      ]
+  // Always generate bulk components file (backward compatibility)
+  const finalText = generateProxies(filteredComponents, pkgData, outputTarget, config.rootDir as string);
+  baseGenerationPromises.push(compilerCtx.fs.writeFile(outputTarget.directivesProxyFile, finalText));
+
+  // Generate individual component files when enabled
+  const individualComponentPromises = outputTarget.individualComponentExport
+    ? [generateIndividualComponents(compilerCtx, filteredComponents, outputTarget)]
     : [];
 
-  await Promise.all([...baseGenerationPromises, ...standalonePromises]);
+  await Promise.all([...baseGenerationPromises, ...individualComponentPromises]);
 }
 
 function getFilteredComponents(excludeComponents: string[] = [], cmps: ComponentCompilerMeta[]) {
@@ -61,9 +60,9 @@ function getFilteredComponents(excludeComponents: string[] = [], cmps: Component
 }
 
 /**
- * Validates the configuration when standalone mode is enabled
+ * Validates the configuration when individual component export is enabled
  */
-function validateStandaloneConfig(outputTarget: OutputTargetAngular, config: Config) {
+function validateIndividualComponentConfig(outputTarget: OutputTargetAngular, config: Config) {
   // Check if dist-custom-elements output target is configured
   const hasCustomElementsOutput = config.outputTargets?.some(
     (target) => target.type === 'dist-custom-elements'
@@ -71,7 +70,7 @@ function validateStandaloneConfig(outputTarget: OutputTargetAngular, config: Con
 
   if (!hasCustomElementsOutput) {
     throw new Error(
-      'Standalone components require a "dist-custom-elements" output target to be configured. ' +
+      'Individual component export requires a "dist-custom-elements" output target to be configured. ' +
       'Add { type: "dist-custom-elements", customElementsExportBehavior: "single-export-module" } ' +
       'to your outputTargets array in stencil.config.ts'
     );
@@ -87,9 +86,7 @@ async function copyResources(config: Config, outputTarget: OutputTargetAngular) 
   if (!config.sys || !config.sys.copy || !config.sys.glob) {
     throw new Error('stencil is not properly initialized at this step. Notify the developer');
   }
-  // Fix __dirname issue in ES modules
-  const currentDir = path.dirname(new URL(import.meta.url).pathname);
-  const srcDirectory = path.join(currentDir, '..', 'angular-component-lib');
+  const srcDirectory = path.join(__dirname, '..', 'angular-component-lib');
   const destDirectory = path.join(path.dirname(outputTarget.directivesProxyFile), 'angular-component-lib');
 
   return config.sys.copy(
@@ -170,16 +167,16 @@ ${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n
    * IonButton would be imported as IonButtonCmp so as to not conflict with the
    * IonButton Angular Component that takes in the Web Component as a parameter.
    * 
-   * For standalone builds, skip bulk imports to enable tree-shaking.
-   * Individual components will import their own defineCustomElement functions.
+   * Generate bulk imports for backward compatibility.
+   * Individual components will also import their own defineCustomElement functions when in standalone mode.
    */
-  if (isCustomElementsBuild && outputTarget.componentCorePackage !== undefined && !isStandaloneBuild) {
+  if (isCustomElementsBuild && outputTarget.componentCorePackage !== undefined) {
     const cmpImports = components.map((component) => {
       const pascalImport = dashToPascalCase(component.tagName);
 
-      return `import { defineCustomElement as define${pascalImport} } from '${normalizePath(
+      return `import { defineCustomElement${pascalImport} as define${pascalImport} } from '${normalizePath(
         outputTarget.componentCorePackage
-      )}/${outputTarget.customElementsDir}/${component.tagName}.js';`;
+      )}/${outputTarget.customElementsDir}';`;
     });
 
     sourceImports = cmpImports.join('\n');
@@ -197,9 +194,8 @@ ${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n
 
   const { componentCorePackage, customElementsDir } = outputTarget;
 
-  // For standalone builds, skip generating bulk component definitions in proxies.ts
-  // Individual components will be generated separately with their own defineCustomElement imports
-  if (!isStandaloneBuild) {
+  // Generate bulk component definitions for backward compatibility
+  // Individual components will also be generated separately for tree-shaking when in standalone mode
     for (let cmpMeta of components) {
     const tagNameAsPascal = dashToPascalCase(cmpMeta.tagName);
 
@@ -254,7 +250,6 @@ ${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n
       proxyFileOutput.push(moduleDefinition, '\n');
     }
     proxyFileOutput.push(componentTypeDefinition, '\n');
-    }
   }
 
   const final: string[] = [imports, typeImports, sourceImports, ...proxyFileOutput];

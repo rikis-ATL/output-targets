@@ -1,7 +1,7 @@
 import path from 'path';
 import type { CompilerCtx, ComponentCompilerMeta } from '@stencil/core/internal';
 import type { OutputTargetAngular } from './types';
-import { dashToPascalCase, normalizePath } from './utils';
+import { dashToPascalCase } from './utils';
 import { createAngularComponentDefinition, createComponentTypeDefinition } from './generate-angular-component';
 
 /**
@@ -15,14 +15,14 @@ export async function generateIndividualComponents(
   components: ComponentCompilerMeta[],
   outputTarget: OutputTargetAngular
 ) {
-  // Only generate individual files for standalone components
-  if (outputTarget.outputType !== 'standalone') {
+  // Only generate individual files when individual component export is enabled
+  if (!outputTarget.individualComponentExport) {
     return;
   }
 
-  const componentsExportDir = './components';
+  // Generate individual components in a flat structure to avoid ng-packagr conflicts
   const baseDir = path.dirname(outputTarget.directivesProxyFile);
-  const componentsDir = path.resolve(baseDir, componentsExportDir);
+  const componentsDir = path.join(baseDir, 'components');
 
   // Generate individual component files and barrel export
   const componentPromises = components.map((component) =>
@@ -32,14 +32,16 @@ export async function generateIndividualComponents(
   // Generate barrel export for convenience (with tree-shaking caveats)
   const barrelExportPromise = generateBarrelExport(compilerCtx, components, componentsDir);
 
-  // For now, skip package.json generation as it conflicts with ng-packagr
-  // TODO: Investigate proper way to configure exports for ng-packagr
-  await Promise.all([...componentPromises, barrelExportPromise]);
-  // const packageJsonPromise = generatePackageJsonExports(compilerCtx, components, baseDir);
-  // await Promise.all([...componentPromises, barrelExportPromise, packageJsonPromise]);
+  // Generate definitions file for individual component imports
+  const definitionsPromise = generateDefinitionsFile(compilerCtx, components, outputTarget, componentsDir);
+
+  // Generate individual component files and update package.json exports
+  const packageJsonPromise = generatePackageJsonExports(compilerCtx, components, baseDir);
+  await Promise.all([...componentPromises, barrelExportPromise, definitionsPromise, packageJsonPromise]);
 
 }
 
+// Generate package.json exports configuration for individual components and tree-shaking
 async function generatePackageJsonExports(
   compilerCtx: CompilerCtx,
   components: ComponentCompilerMeta[],
@@ -68,17 +70,25 @@ async function generatePackageJsonExports(
     // If it's a string, use it as the main export
     exports["."] = existingExports;
   } else {
-    // Default main export
-    exports["."] = "./dist/index.js";
+    // Default main export - let ng-packagr handle this
+    exports["."] = {
+      types: "./index.d.ts",
+      default: "./fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    };
   }
   
-  // Add components barrel export
-  exports["./components"] = "./dist/components/index.js";
+  // Add components barrel export (ng-packagr will build this as a secondary entry point)
+  exports["./components"] = {
+    types: "./components/index.d.ts",
+    default: "./components/index.js"
+  };
 
-  // Add individual component exports for secondary entry points
+  // Add individual component exports for tree-shaking
   components.forEach(component => {
-    exports[`./components/${component.tagName}`] =
-      `./dist/components/${component.tagName}.js`;
+    exports[`./components/${component.tagName}`] = {
+      types: `./components/${component.tagName}.d.ts`,
+      default: `./components/${component.tagName}.js`
+    };
   });
 
   const updatedPackageJson = {
@@ -90,6 +100,9 @@ async function generatePackageJsonExports(
   await compilerCtx.fs.writeFile(libraryPackageJsonPath,
     JSON.stringify(updatedPackageJson, null, 2));
 }
+
+// Export the function to avoid TS6133 unused warning
+export { generatePackageJsonExports };
 
 
 
@@ -130,14 +143,14 @@ import { ${angularImports.join(', ')} } from '@angular/core';
 
 import { ProxyCmp } from '../angular-component-lib/utils';
 
-import type { Components } from '${outputTarget.componentCorePackage}/${outputTarget.customElementsDir || 'components'}';`;
+import type { Components } from '${outputTarget.componentCorePackage}';`;
 
   // Event types are handled by the main Components interface
   let eventImports = '';
 
-  // Individual defineCustomElement import
+  // Individual defineCustomElement import - use relative import from shared definitions
   const defineCustomElementImport = `
-import { defineCustomElement as define${tagNameAsPascal} } from '${normalizePath(outputTarget.componentCorePackage)}/${outputTarget.customElementsDir || 'components'}/${component.tagName}.js';`;
+import { define${tagNameAsPascal} } from './definitions';`;
 
   // Filter internal properties
   const filterInternalProps = (prop: { name: string; internal: boolean }) => !prop.internal;
@@ -183,6 +196,42 @@ import { defineCustomElement as define${tagNameAsPascal} } from '${normalizePath
   ].join('\n');
 
   await compilerCtx.fs.writeFile(filePath, fileContent);
+}
+
+
+
+/**
+ * Generates a definitions file that re-exports all defineCustomElement functions
+ * with simplified names for individual component imports
+ */
+async function generateDefinitionsFile(
+  compilerCtx: CompilerCtx,
+  components: ComponentCompilerMeta[],
+  outputTarget: OutputTargetAngular,
+  componentsDir: string
+) {
+  const definitionsPath = path.join(componentsDir, 'definitions.ts');
+
+  const imports = components.map(component => {
+    const tagNameAsPascal = dashToPascalCase(component.tagName);
+    return `defineCustomElement${tagNameAsPascal} as define${tagNameAsPascal}`;
+  });
+
+  const content = [
+    '// Re-export defineCustomElement functions for individual component imports',
+    '// This file provides a stable import path that works with TypeScript module resolution',
+    '',
+    `import {`,
+    `  ${imports.join(',\n  ')}`,
+    `} from '${outputTarget.componentCorePackage}/components';`,
+    '',
+    ...components.map(component => {
+      const tagNameAsPascal = dashToPascalCase(component.tagName);
+      return `export { define${tagNameAsPascal} };`;
+    })
+  ].join('\n');
+
+  await compilerCtx.fs.writeFile(definitionsPath, content);
 }
 
 /**
