@@ -2,7 +2,7 @@
  * The type of output that can be generated with the Angular output target.
  * - `component` - Generate many component wrappers tied to a single Angular module (lazy/hydrated approach).
  * - `scam` - Generate a Single Component Angular Module for each component.
- * - `standalone` - Generates standalone components.
+ * - `standalone` - Generates standalone components with automatic tree-shaking support.
  */
 export type OutputType = 'component' | 'scam' | 'standalone';
 
@@ -25,7 +25,7 @@ export interface OutputTargetAngular {
    * The type of output that should be generated.
    * - `component` - Generate many component wrappers tied to a single Angular module (lazy/hydrated approach).
    * - `scam` - Generate a Single Component Angular Module for each component.
-   * - `standalone` - (default) Generates standalone components.
+   * - `standalone` - (default) Generates standalone components with automatic tree-shaking support.
    */
   outputType?: OutputType;
   /**
@@ -34,22 +34,6 @@ export interface OutputTargetAngular {
    * to type-check and show jsdocs when using the components in html-templates.
    */
   inlineProperties?: boolean;
-  /**
-   * Enable tree-shaking support with individual component exports.
-   * When true, automatically:
-   * - Generates individual component files for optimal bundle sizes
-   * - Creates post-build script for package.json subpath exports
-   * - Sets up barrel exports for tree-shaking
-   * - Enforces standalone components (sets outputType to 'standalone')
-   * @default false
-   */
-  enableTreeShaking?: boolean;
-  /**
-   * Optional: Custom path for individual component exports when tree-shaking is enabled.
-   * Path is relative to the Angular library root.
-   * @default './lib/components'
-   */
-  treeShakingDir?: string;
 }
 
 export type ValueAccessorTypes = 'text' | 'radio' | 'select' | 'number' | 'boolean';

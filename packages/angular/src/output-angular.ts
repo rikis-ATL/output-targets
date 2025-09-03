@@ -17,7 +17,7 @@ import { generateAngularDirectivesFile } from './generate-angular-directives-fil
 import generateValueAccessors from './generate-value-accessors';
 import { generateAngularModuleForComponent } from './generate-angular-modules';
 import { generateIndividualComponents } from './generate-individual-components';
-import { generateTreeShakingExportScript, updatePackageJsonForTreeShaking } from './generate-tree-shaking-exports';
+import { generateSecondaryEntryPoints } from './generate-secondary-entry-points';
 
 export async function angularDirectiveProxyOutput(
   compilerCtx: CompilerCtx,
@@ -25,9 +25,11 @@ export async function angularDirectiveProxyOutput(
   components: ComponentCompilerMeta[],
   config: Config
 ) {
-  // Validate and enforce tree-shaking configuration
-  if (outputTarget.enableTreeShaking) {
-    validateTreeShakingConfig(outputTarget, config);
+  // Angular output target implementation
+  
+  // Validate standalone configuration if needed
+  if (outputTarget.outputType === 'standalone') {
+    validateStandaloneConfig(outputTarget, config);
   }
 
   const filteredComponents = getFilteredComponents(outputTarget.excludeComponents, components);
@@ -43,16 +45,15 @@ export async function angularDirectiveProxyOutput(
     generateValueAccessors(compilerCtx, filteredComponents, outputTarget, config),
   ];
 
-  // Add tree-shaking specific generation if enabled
-  const treeShakingPromises = outputTarget.enableTreeShaking
+  // Generate individual component files for standalone mode (automatic tree-shaking)
+  const standalonePromises = outputTarget.outputType === 'standalone'
     ? [
         generateIndividualComponents(compilerCtx, filteredComponents, outputTarget),
-        generateTreeShakingExportScript(compilerCtx, filteredComponents, outputTarget),
-        updatePackageJsonForTreeShaking(compilerCtx, outputTarget),
+        generateSecondaryEntryPoints(compilerCtx, filteredComponents, outputTarget)
       ]
     : [];
 
-  await Promise.all([...baseGenerationPromises, ...treeShakingPromises]);
+  await Promise.all([...baseGenerationPromises, ...standalonePromises]);
 }
 
 function getFilteredComponents(excludeComponents: string[] = [], cmps: ComponentCompilerMeta[]) {
@@ -60,9 +61,9 @@ function getFilteredComponents(excludeComponents: string[] = [], cmps: Component
 }
 
 /**
- * Validates the configuration when tree-shaking is enabled
+ * Validates the configuration when standalone mode is enabled
  */
-function validateTreeShakingConfig(outputTarget: OutputTargetAngular, config: Config) {
+function validateStandaloneConfig(outputTarget: OutputTargetAngular, config: Config) {
   // Check if dist-custom-elements output target is configured
   const hasCustomElementsOutput = config.outputTargets?.some(
     (target) => target.type === 'dist-custom-elements'
@@ -70,16 +71,10 @@ function validateTreeShakingConfig(outputTarget: OutputTargetAngular, config: Co
 
   if (!hasCustomElementsOutput) {
     throw new Error(
-      'enableTreeShaking requires a "dist-custom-elements" output target to be configured. ' +
+      'Standalone components require a "dist-custom-elements" output target to be configured. ' +
       'Add { type: "dist-custom-elements", customElementsExportBehavior: "single-export-module" } ' +
       'to your outputTargets array in stencil.config.ts'
     );
-  }
-
-  // Auto-fix outputType to standalone for optimal tree-shaking
-  if (outputTarget.outputType && outputTarget.outputType !== 'standalone') {
-    // Automatically set to standalone - tree-shaking requires this configuration
-    outputTarget.outputType = 'standalone';
   }
 
   // Set default customElementsDir if not provided
@@ -92,7 +87,9 @@ async function copyResources(config: Config, outputTarget: OutputTargetAngular) 
   if (!config.sys || !config.sys.copy || !config.sys.glob) {
     throw new Error('stencil is not properly initialized at this step. Notify the developer');
   }
-  const srcDirectory = path.join(__dirname, '..', 'angular-component-lib');
+  // Fix __dirname issue in ES modules
+  const currentDir = path.dirname(new URL(import.meta.url).pathname);
+  const srcDirectory = path.join(currentDir, '..', 'angular-component-lib');
   const destDirectory = path.join(path.dirname(outputTarget.directivesProxyFile), 'angular-component-lib');
 
   return config.sys.copy(
@@ -172,8 +169,11 @@ ${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n
    * so that they do not conflict with the Angular wrapper names. For example,
    * IonButton would be imported as IonButtonCmp so as to not conflict with the
    * IonButton Angular Component that takes in the Web Component as a parameter.
+   * 
+   * For standalone builds, skip bulk imports to enable tree-shaking.
+   * Individual components will import their own defineCustomElement functions.
    */
-  if (isCustomElementsBuild && outputTarget.componentCorePackage !== undefined) {
+  if (isCustomElementsBuild && outputTarget.componentCorePackage !== undefined && !isStandaloneBuild) {
     const cmpImports = components.map((component) => {
       const pascalImport = dashToPascalCase(component.tagName);
 
@@ -197,7 +197,10 @@ ${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n
 
   const { componentCorePackage, customElementsDir } = outputTarget;
 
-  for (let cmpMeta of components) {
+  // For standalone builds, skip generating bulk component definitions in proxies.ts
+  // Individual components will be generated separately with their own defineCustomElement imports
+  if (!isStandaloneBuild) {
+    for (let cmpMeta of components) {
     const tagNameAsPascal = dashToPascalCase(cmpMeta.tagName);
 
     const internalProps: ComponentCompilerProperty[] = [];
@@ -251,6 +254,7 @@ ${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n
       proxyFileOutput.push(moduleDefinition, '\n');
     }
     proxyFileOutput.push(componentTypeDefinition, '\n');
+    }
   }
 
   const final: string[] = [imports, typeImports, sourceImports, ...proxyFileOutput];

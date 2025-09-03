@@ -1,0 +1,34 @@
+<nav style="padding: 1rem; background: #f5f5f5; border-radius: 8px; margin-bottom: 2rem;">
+  <h2>Navigation</h2>
+  <a routerLink="/" style="margin-right: 1rem;">All Components</a>
+  <a routerLink="/tree-shaking">Tree-Shaking Example</a>
+</nav>
+
+<div class="demo-section">
+  <h2>Tree-Shaking Example</h2>
+  
+  <div class="info">
+    <strong>Bundle Size Optimization:</strong><br>
+    This example imports only MyButton and MyCounter components:<br>
+    <code>import {{ '{' }} MyButton {{ '}' }} from 'component-library-angular/components/my-button';</code><br>
+    <code>import {{ '{' }} MyCounter {{ '}' }} from 'component-library-angular/components/my-counter';</code><br><br>
+    
+    This results in a much smaller bundle compared to importing the entire library:<br>
+    <code>import {{ '{' }} MyButton, MyCounter {{ '}' }} from 'component-library-angular'; // ❌ Imports everything</code>
+  </div>
+
+  <div class="demo-section">
+    <h3>MyButton Component</h3>
+    <my-button 
+      color="primary" 
+      size="medium"
+      (myClick)="handleClick()">
+      Click me! ({{ clicked }})
+    </my-button>
+  </div>
+
+  <div class="demo-section">
+    <h3>MyCounter Component</h3>
+    <my-counter></my-counter>
+  </div>
+</div>

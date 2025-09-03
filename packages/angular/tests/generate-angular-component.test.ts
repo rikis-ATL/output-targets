@@ -302,6 +302,15 @@ export class MyComponent {
   }
 }`);
     });
+
+    it('generates a standalone component for tree-shaking', () => {
+      const component = createAngularComponentDefinition('my-button', [{name: 'label', required: false}], [], true, true, [], []);
+
+      expect(component).toContain('defineCustomElementFn: defineMyButton');
+      expect(component).not.toContain('standalone: false');
+      // Standalone components omit the standalone property when true (it's implicit)
+      expect(component).toContain('@Component({');
+    });
   });
   describe('inline members', () => {
     it('generates component with inlined member with jsDoc', () => {

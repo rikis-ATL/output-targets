@@ -5,33 +5,94 @@ import { dashToPascalCase, normalizePath } from './utils';
 import { createAngularComponentDefinition, createComponentTypeDefinition } from './generate-angular-component';
 
 /**
- * Generates individual component files for tree-shaking support.
+ * Generates individual component files for standalone components.
  * Each component gets its own file with only the necessary imports to enable
  * optimal bundle sizes when consumers import specific components.
+ * This is automatically enabled for standalone output type.
  */
 export async function generateIndividualComponents(
   compilerCtx: CompilerCtx,
   components: ComponentCompilerMeta[],
   outputTarget: OutputTargetAngular
 ) {
-  if (!outputTarget.enableTreeShaking) {
+  // Only generate individual files for standalone components
+  if (outputTarget.outputType !== 'standalone') {
     return;
   }
 
-  const treeShakingDir = outputTarget.treeShakingDir || './lib/components';
+  const componentsExportDir = './components';
   const baseDir = path.dirname(outputTarget.directivesProxyFile);
-  const componentsDir = path.resolve(baseDir, treeShakingDir);
+  const componentsDir = path.resolve(baseDir, componentsExportDir);
 
-  // Generate individual component files
+  // Generate individual component files and barrel export
   const componentPromises = components.map((component) =>
     generateIndividualComponentFile(compilerCtx, component, outputTarget, componentsDir)
   );
 
-  // Generate barrel export file
+  // Generate barrel export for convenience (with tree-shaking caveats)
   const barrelExportPromise = generateBarrelExport(compilerCtx, components, componentsDir);
 
+  // For now, skip package.json generation as it conflicts with ng-packagr
+  // TODO: Investigate proper way to configure exports for ng-packagr
   await Promise.all([...componentPromises, barrelExportPromise]);
+  // const packageJsonPromise = generatePackageJsonExports(compilerCtx, components, baseDir);
+  // await Promise.all([...componentPromises, barrelExportPromise, packageJsonPromise]);
+
 }
+
+async function generatePackageJsonExports(
+  compilerCtx: CompilerCtx,
+  components: ComponentCompilerMeta[],
+  baseDir: string
+) {
+  // Target the library's package.json, not the output target's
+  const libraryPackageJsonPath = path.join(baseDir, '../package.json');
+
+  // Read existing package.json
+  let existingPackageJson = {};
+  try {
+    const existingContent = await compilerCtx.fs.readFile(libraryPackageJsonPath);
+    existingPackageJson = JSON.parse(existingContent);
+  } catch (e) {
+    // File doesn't exist, use empty object
+  }
+
+  // Handle existing exports properly - if it exists and is a string, preserve main export
+  const existingExports = (existingPackageJson as any).exports;
+  let exports: Record<string, any> = {};
+  
+  // If exports exists and is an object, merge with it
+  if (existingExports && typeof existingExports === 'object') {
+    exports = { ...existingExports };
+  } else if (existingExports && typeof existingExports === 'string') {
+    // If it's a string, use it as the main export
+    exports["."] = existingExports;
+  } else {
+    // Default main export
+    exports["."] = "./dist/index.js";
+  }
+  
+  // Add components barrel export
+  exports["./components"] = "./dist/components/index.js";
+
+  // Add individual component exports for secondary entry points
+  components.forEach(component => {
+    exports[`./components/${component.tagName}`] =
+      `./dist/components/${component.tagName}.js`;
+  });
+
+  const updatedPackageJson = {
+    ...existingPackageJson,
+    sideEffects: false, // Mark as side-effect free for tree-shaking
+    exports
+  };
+
+  await compilerCtx.fs.writeFile(libraryPackageJsonPath,
+    JSON.stringify(updatedPackageJson, null, 2));
+}
+
+
+
 
 /**
  * Generates a single component file with only its specific defineCustomElement import.
@@ -51,7 +112,7 @@ async function generateIndividualComponentFile(
   // Import statements for Angular
   const angularImports = [
     'ChangeDetectionStrategy',
-    'ChangeDetectorRef', 
+    'ChangeDetectorRef',
     'Component',
     'ElementRef',
     'NgZone'
@@ -67,25 +128,12 @@ async function generateIndividualComponentFile(
 /* auto-generated angular directive proxy for ${component.tagName} */
 import { ${angularImports.join(', ')} } from '@angular/core';
 
-import { ProxyCmp } from '../stencil-generated/angular-component-lib/utils';
+import { ProxyCmp } from '../angular-component-lib/utils';
 
 import type { Components } from '${outputTarget.componentCorePackage}/${outputTarget.customElementsDir || 'components'}';`;
 
-  // Add event type imports if needed
+  // Event types are handled by the main Components interface
   let eventImports = '';
-  if (hasEvents) {
-    const eventTypes = component.events
-      .filter(event => !event.internal)
-      .map(event => {
-        const eventTypeName = `I${tagNameAsPascal}${dashToPascalCase(event.name)}`;
-        return eventTypeName;
-      });
-    
-    if (eventTypes.length > 0) {
-      eventImports = `
-import type { ${eventTypes.join(', ')} } from '${outputTarget.componentCorePackage}/${outputTarget.customElementsDir || 'components'}';`;
-    }
-  }
 
   // Individual defineCustomElement import
   const defineCustomElementImport = `
@@ -93,10 +141,10 @@ import { defineCustomElement as define${tagNameAsPascal} } from '${normalizePath
 
   // Filter internal properties
   const filterInternalProps = (prop: { name: string; internal: boolean }) => !prop.internal;
-  
+
   const internalProps = component.properties ? component.properties.filter(filterInternalProps) : [];
   const inputs = internalProps.map(prop => ({ name: prop.name, required: prop.required ?? false }));
-  
+
   if (component.virtualProperties) {
     inputs.push(...component.virtualProperties.map(prop => ({ name: prop.name, required: false })));
   }
@@ -146,7 +194,7 @@ async function generateBarrelExport(
   componentsDir: string
 ) {
   const indexPath = path.join(componentsDir, 'index.ts');
-  
+
   const exports = components.map(component => {
     const tagNameAsPascal = dashToPascalCase(component.tagName);
     return `export { ${tagNameAsPascal} } from './${component.tagName}';`;

@@ -30,8 +30,6 @@ export function normalizeOutputTarget(config: Config, outputTarget: OutputTarget
     valueAccessorConfigs: outputTarget.valueAccessorConfigs || [],
     customElementsDir: outputTarget.customElementsDir ?? 'components',
     outputType: outputTarget.outputType ?? OutputTypes.Standalone,
-    enableTreeShaking: outputTarget.enableTreeShaking ?? false,
-    treeShakingDir: outputTarget.treeShakingDir ?? './lib/components',
   };
 
   if (config.rootDir == null) {

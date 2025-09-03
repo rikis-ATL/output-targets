@@ -29,6 +29,23 @@ describe('normalizeOutputTarget', () => {
     expect(results.valueAccessorConfigs).toEqual([]);
   });
 
+  it('should default outputType to standalone', () => {
+    const results: OutputTargetAngular = normalizeOutputTarget(config, {
+      directivesProxyFile: '/component-library-angular/src/components.ts',
+    } as OutputTargetAngular);
+
+    expect(results.outputType).toBe('standalone');
+  });
+
+  it('should preserve explicitly set outputType', () => {
+    const results: OutputTargetAngular = normalizeOutputTarget(config, {
+      directivesProxyFile: '/component-library-angular/src/components.ts',
+      outputType: 'component',
+    } as OutputTargetAngular);
+
+    expect(results.outputType).toBe('component');
+  });
+
   it('should return defaults for outputType', () => {
     const results = normalizeOutputTarget(config, { directivesProxyFile: '' } as OutputTargetAngular);
 

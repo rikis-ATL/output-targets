@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MyComponent, MyCounter, MyToggle } from 'component-library-angular';
 import { ButtonTests } from './button-tests/button-tests';
 import { CheckboxTests } from './checkbox-tests/checkbox-tests';
@@ -10,6 +11,7 @@ import { RangeTests } from './range-tests/range-tests';
 @Component({
   selector: 'app-component-tests',
   imports: [
+    RouterLink,
     MyComponent,
     MyCounter,
     MyToggle,

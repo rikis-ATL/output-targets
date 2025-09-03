@@ -1,5 +1,5 @@
 import { Config } from '@stencil/core';
-import { angularOutputTarget, ValueAccessorConfig } from '@stencil/angular-output-target';
+import { angularOutputTarget, ValueAccessorConfig } from '../../packages/angular/dist/index';
 import { reactOutputTarget } from '@stencil/react-output-target';
 import { vueOutputTarget, ComponentModelConfig } from '@stencil/vue-output-target';
 
@@ -62,7 +62,8 @@ export const config: Config = {
   outputTargets: [
     angularOutputTarget({
       componentCorePackage: 'component-library',
-      directivesProxyFile: '../component-library-angular/projects/library/src/directives/proxies.ts',
+      outputType: 'standalone', // Enables tree-shaking with individual component exports
+      directivesProxyFile: '../component-library-angular/projects/library/src/proxies.ts',
       valueAccessorConfigs: angularValueAccessorBindings
     }),
     reactOutputTarget({
@@ -82,6 +83,7 @@ export const config: Config = {
     }),
     {
       type: 'dist-custom-elements',
+      customElementsExportBehavior: 'single-export-module', // Required for tree-shaking
       externalRuntime: false,
       dir: 'components'
     },
