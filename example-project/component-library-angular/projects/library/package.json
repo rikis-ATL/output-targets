@@ -18,6 +18,90 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./components/index.d.ts",
+      "default": "./components/index.js"
+    },
+    "./components/my-button": {
+      "types": "./components/my-button.d.ts",
+      "default": "./components/my-button.js"
+    },
+    "./components/my-button-scoped": {
+      "types": "./components/my-button-scoped.d.ts",
+      "default": "./components/my-button-scoped.js"
+    },
+    "./components/my-checkbox": {
+      "types": "./components/my-checkbox.d.ts",
+      "default": "./components/my-checkbox.js"
+    },
+    "./components/my-complex-props": {
+      "types": "./components/my-complex-props.d.ts",
+      "default": "./components/my-complex-props.js"
+    },
+    "./components/my-complex-props-scoped": {
+      "types": "./components/my-complex-props-scoped.d.ts",
+      "default": "./components/my-complex-props-scoped.js"
+    },
+    "./components/my-component": {
+      "types": "./components/my-component.d.ts",
+      "default": "./components/my-component.js"
+    },
+    "./components/my-component-scoped": {
+      "types": "./components/my-component-scoped.d.ts",
+      "default": "./components/my-component-scoped.js"
+    },
+    "./components/my-counter": {
+      "types": "./components/my-counter.d.ts",
+      "default": "./components/my-counter.js"
+    },
+    "./components/my-input": {
+      "types": "./components/my-input.d.ts",
+      "default": "./components/my-input.js"
+    },
+    "./components/my-input-scoped": {
+      "types": "./components/my-input-scoped.d.ts",
+      "default": "./components/my-input-scoped.js"
+    },
+    "./components/my-list": {
+      "types": "./components/my-list.d.ts",
+      "default": "./components/my-list.js"
+    },
+    "./components/my-list-item": {
+      "types": "./components/my-list-item.d.ts",
+      "default": "./components/my-list-item.js"
+    },
+    "./components/my-list-item-scoped": {
+      "types": "./components/my-list-item-scoped.d.ts",
+      "default": "./components/my-list-item-scoped.js"
+    },
+    "./components/my-list-scoped": {
+      "types": "./components/my-list-scoped.d.ts",
+      "default": "./components/my-list-scoped.js"
+    },
+    "./components/my-popover": {
+      "types": "./components/my-popover.d.ts",
+      "default": "./components/my-popover.js"
+    },
+    "./components/my-radio": {
+      "types": "./components/my-radio.d.ts",
+      "default": "./components/my-radio.js"
+    },
+    "./components/my-radio-group": {
+      "types": "./components/my-radio-group.d.ts",
+      "default": "./components/my-radio-group.js"
+    },
+    "./components/my-range": {
+      "types": "./components/my-range.d.ts",
+      "default": "./components/my-range.js"
+    },
+    "./components/my-toggle": {
+      "types": "./components/my-toggle.d.ts",
+      "default": "./components/my-toggle.js"
+    },
+    "./components/my-toggle-content": {
+      "types": "./components/my-toggle-content.d.ts",
+      "default": "./components/my-toggle-content.js"
     }
   }
 }

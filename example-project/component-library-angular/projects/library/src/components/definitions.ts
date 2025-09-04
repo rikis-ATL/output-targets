@@ -1,46 +1,46 @@
 // Re-export defineCustomElement functions for individual component imports
 // This file provides a stable import path that works with TypeScript module resolution
 
-import { 
-  defineCustomElementMyButton,
-  defineCustomElementMyButtonScoped,
-  defineCustomElementMyCheckbox,
-  defineCustomElementMyComplexProps,
-  defineCustomElementMyComplexPropsScoped,
-  defineCustomElementMyComponent,
-  defineCustomElementMyComponentScoped,
-  defineCustomElementMyCounter,
-  defineCustomElementMyInput,
-  defineCustomElementMyInputScoped,
-  defineCustomElementMyList,
-  defineCustomElementMyListItem,
-  defineCustomElementMyListItemScoped,
-  defineCustomElementMyListScoped,
-  defineCustomElementMyPopover,
-  defineCustomElementMyRadio,
-  defineCustomElementMyRadioGroup,
-  defineCustomElementMyRange,
-  defineCustomElementMyToggle,
-  defineCustomElementMyToggleContent
-} from 'component-library/components/index.js';
+import {
+  defineCustomElementMyButton as defineMyButton,
+  defineCustomElementMyButtonScoped as defineMyButtonScoped,
+  defineCustomElementMyCheckbox as defineMyCheckbox,
+  defineCustomElementMyComplexProps as defineMyComplexProps,
+  defineCustomElementMyComplexPropsScoped as defineMyComplexPropsScoped,
+  defineCustomElementMyComponent as defineMyComponent,
+  defineCustomElementMyComponentScoped as defineMyComponentScoped,
+  defineCustomElementMyCounter as defineMyCounter,
+  defineCustomElementMyInput as defineMyInput,
+  defineCustomElementMyInputScoped as defineMyInputScoped,
+  defineCustomElementMyList as defineMyList,
+  defineCustomElementMyListItem as defineMyListItem,
+  defineCustomElementMyListItemScoped as defineMyListItemScoped,
+  defineCustomElementMyListScoped as defineMyListScoped,
+  defineCustomElementMyPopover as defineMyPopover,
+  defineCustomElementMyRadio as defineMyRadio,
+  defineCustomElementMyRadioGroup as defineMyRadioGroup,
+  defineCustomElementMyRange as defineMyRange,
+  defineCustomElementMyToggle as defineMyToggle,
+  defineCustomElementMyToggleContent as defineMyToggleContent
+} from 'component-library/components';
 
-export { defineCustomElementMyButton as defineMyButton };
-export { defineCustomElementMyButtonScoped as defineMyButtonScoped };
-export { defineCustomElementMyCheckbox as defineMyCheckbox };
-export { defineCustomElementMyComplexProps as defineMyComplexProps };
-export { defineCustomElementMyComplexPropsScoped as defineMyComplexPropsScoped };
-export { defineCustomElementMyComponent as defineMyComponent };
-export { defineCustomElementMyComponentScoped as defineMyComponentScoped };
-export { defineCustomElementMyCounter as defineMyCounter };
-export { defineCustomElementMyInput as defineMyInput };
-export { defineCustomElementMyInputScoped as defineMyInputScoped };
-export { defineCustomElementMyList as defineMyList };
-export { defineCustomElementMyListItem as defineMyListItem };
-export { defineCustomElementMyListItemScoped as defineMyListItemScoped };
-export { defineCustomElementMyListScoped as defineMyListScoped };
-export { defineCustomElementMyPopover as defineMyPopover };
-export { defineCustomElementMyRadio as defineMyRadio };
-export { defineCustomElementMyRadioGroup as defineMyRadioGroup };
-export { defineCustomElementMyRange as defineMyRange };
-export { defineCustomElementMyToggle as defineMyToggle };
-export { defineCustomElementMyToggleContent as defineMyToggleContent };
+export { defineMyButton };
+export { defineMyButtonScoped };
+export { defineMyCheckbox };
+export { defineMyComplexProps };
+export { defineMyComplexPropsScoped };
+export { defineMyComponent };
+export { defineMyComponentScoped };
+export { defineMyCounter };
+export { defineMyInput };
+export { defineMyInputScoped };
+export { defineMyList };
+export { defineMyListItem };
+export { defineMyListItemScoped };
+export { defineMyListScoped };
+export { defineMyPopover };
+export { defineMyRadio };
+export { defineMyRadioGroup };
+export { defineMyRange };
+export { defineMyToggle };
+export { defineMyToggleContent };
