@@ -4,28 +4,28 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Even
 
 import { ProxyCmp } from './angular-component-lib/utils';
 
-import type { Components } from 'component-library';
+import type { Components } from 'component-library/components';
 
-import { defineCustomElement as defineMyButton } from 'component-library/components/my-button.js';
-import { defineCustomElement as defineMyButtonScoped } from 'component-library/components/my-button-scoped.js';
-import { defineCustomElement as defineMyCheckbox } from 'component-library/components/my-checkbox.js';
-import { defineCustomElement as defineMyComplexProps } from 'component-library/components/my-complex-props.js';
-import { defineCustomElement as defineMyComplexPropsScoped } from 'component-library/components/my-complex-props-scoped.js';
-import { defineCustomElement as defineMyComponent } from 'component-library/components/my-component.js';
-import { defineCustomElement as defineMyComponentScoped } from 'component-library/components/my-component-scoped.js';
-import { defineCustomElement as defineMyCounter } from 'component-library/components/my-counter.js';
-import { defineCustomElement as defineMyInput } from 'component-library/components/my-input.js';
-import { defineCustomElement as defineMyInputScoped } from 'component-library/components/my-input-scoped.js';
-import { defineCustomElement as defineMyList } from 'component-library/components/my-list.js';
-import { defineCustomElement as defineMyListItem } from 'component-library/components/my-list-item.js';
-import { defineCustomElement as defineMyListItemScoped } from 'component-library/components/my-list-item-scoped.js';
-import { defineCustomElement as defineMyListScoped } from 'component-library/components/my-list-scoped.js';
-import { defineCustomElement as defineMyPopover } from 'component-library/components/my-popover.js';
-import { defineCustomElement as defineMyRadio } from 'component-library/components/my-radio.js';
-import { defineCustomElement as defineMyRadioGroup } from 'component-library/components/my-radio-group.js';
-import { defineCustomElement as defineMyRange } from 'component-library/components/my-range.js';
-import { defineCustomElement as defineMyToggle } from 'component-library/components/my-toggle.js';
-import { defineCustomElement as defineMyToggleContent } from 'component-library/components/my-toggle-content.js';
+import { defineCustomElementMyButton as defineMyButton } from 'component-library/components';
+import { defineCustomElementMyButtonScoped as defineMyButtonScoped } from 'component-library/components';
+import { defineCustomElementMyCheckbox as defineMyCheckbox } from 'component-library/components';
+import { defineCustomElementMyComplexProps as defineMyComplexProps } from 'component-library/components';
+import { defineCustomElementMyComplexPropsScoped as defineMyComplexPropsScoped } from 'component-library/components';
+import { defineCustomElementMyComponent as defineMyComponent } from 'component-library/components';
+import { defineCustomElementMyComponentScoped as defineMyComponentScoped } from 'component-library/components';
+import { defineCustomElementMyCounter as defineMyCounter } from 'component-library/components';
+import { defineCustomElementMyInput as defineMyInput } from 'component-library/components';
+import { defineCustomElementMyInputScoped as defineMyInputScoped } from 'component-library/components';
+import { defineCustomElementMyList as defineMyList } from 'component-library/components';
+import { defineCustomElementMyListItem as defineMyListItem } from 'component-library/components';
+import { defineCustomElementMyListItemScoped as defineMyListItemScoped } from 'component-library/components';
+import { defineCustomElementMyListScoped as defineMyListScoped } from 'component-library/components';
+import { defineCustomElementMyPopover as defineMyPopover } from 'component-library/components';
+import { defineCustomElementMyRadio as defineMyRadio } from 'component-library/components';
+import { defineCustomElementMyRadioGroup as defineMyRadioGroup } from 'component-library/components';
+import { defineCustomElementMyRange as defineMyRange } from 'component-library/components';
+import { defineCustomElementMyToggle as defineMyToggle } from 'component-library/components';
+import { defineCustomElementMyToggleContent as defineMyToggleContent } from 'component-library/components';
 @ProxyCmp({
   defineCustomElementFn: defineMyButton,
   inputs: ['buttonType', 'color', 'disabled', 'download', 'expand', 'fill', 'href', 'mode', 'rel', 'shape', 'size', 'strong', 'target', 'type']
@@ -121,8 +121,8 @@ export class MyCheckbox {
 }
 
 
-import type { CheckboxChangeEventDetail as IMyCheckboxCheckboxChangeEventDetail } from 'component-library/dist/types/components/my-checkbox/my-checkbox-interfaces';
-import type { CheckboxChangeNestedEventDetail as IMyCheckboxCheckboxChangeNestedEventDetail } from 'component-library/dist/types/components/my-checkbox/my-checkbox-interfaces';
+import type { CheckboxChangeEventDetail as IMyCheckboxCheckboxChangeEventDetail } from 'component-library';
+import type { CheckboxChangeNestedEventDetail as IMyCheckboxCheckboxChangeNestedEventDetail } from 'component-library';
 
 export declare interface MyCheckbox extends Components.MyCheckbox {
   /**
@@ -238,7 +238,7 @@ export class MyComponentScoped {
 }
 
 
-import type { IMyComponent as IMyComponentScopedIMyComponent } from 'component-library/dist/types/components/my-component-scoped/my-component-interfaces';
+import type { IMyComponent as IMyComponentScopedIMyComponent } from 'component-library';
 
 export declare interface MyComponentScoped extends Components.MyComponentScoped {
   /**
@@ -304,7 +304,7 @@ export class MyInput {
 }
 
 
-import type { InputChangeEventDetail as IMyInputInputChangeEventDetail } from 'component-library/dist/types/components/my-input/my-input-interfaces';
+import type { InputChangeEventDetail as IMyInputInputChangeEventDetail } from 'component-library';
 
 export declare interface MyInput extends Components.MyInput {
   /**
@@ -352,7 +352,7 @@ export class MyInputScoped {
 }
 
 
-import type { InputChangeEventDetail as IMyInputScopedInputChangeEventDetail } from 'component-library/dist/types/components/my-input-scoped/my-input-interfaces';
+import type { InputChangeEventDetail as IMyInputScopedInputChangeEventDetail } from 'component-library';
 
 export declare interface MyInputScoped extends Components.MyInputScoped {
   /**
@@ -488,7 +488,7 @@ export class MyPopover {
 }
 
 
-import type { OverlayEventDetail as IMyPopoverOverlayEventDetail } from 'component-library/dist/types/components/my-popover/my-popover-interfaces';
+import type { OverlayEventDetail as IMyPopoverOverlayEventDetail } from 'component-library';
 
 export declare interface MyPopover extends Components.MyPopover {
   /**
@@ -567,7 +567,7 @@ export class MyRadioGroup {
 }
 
 
-import type { RadioGroupChangeEventDetail as IMyRadioGroupRadioGroupChangeEventDetail } from 'component-library/dist/types/components/my-radio-group/my-radio-group-interfaces';
+import type { RadioGroupChangeEventDetail as IMyRadioGroupRadioGroupChangeEventDetail } from 'component-library';
 
 export declare interface MyRadioGroup extends Components.MyRadioGroup {
   /**
@@ -603,7 +603,7 @@ export class MyRange {
 }
 
 
-import type { RangeChangeEventDetail as IMyRangeRangeChangeEventDetail } from 'component-library/dist/types/components/my-range/my-range-interfaces';
+import type { RangeChangeEventDetail as IMyRangeRangeChangeEventDetail } from 'component-library';
 
 export declare interface MyRange extends Components.MyRange {
   /**
