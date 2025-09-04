@@ -1,0 +1,89 @@
+{
+  "sideEffects": false,
+  "exports": {
+    "./components": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-button": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-button-scoped": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-checkbox": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-complex-props": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-complex-props-scoped": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-component": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-component-scoped": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-counter": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-input": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-input-scoped": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-list": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-list-item": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-list-item-scoped": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-list-scoped": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-popover": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-radio": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-radio-group": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-range": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-toggle": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    },
+    "./components/my-toggle-content": {
+      "types": "./dist/atui-components/index.d.ts",
+      "default": "./dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
+    }
+  }
+}

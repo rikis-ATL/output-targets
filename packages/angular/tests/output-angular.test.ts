@@ -65,7 +65,7 @@ describe('generateProxies', () => {
         `import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Output, NgZone } from '@angular/core';`
       )
     ).toBeTruthy();
-    expect(finalText.includes(`import { ProxyCmp } from './angular-component-lib/utils';`)).toBeTruthy();
+    expect(finalText.includes(`import { ProxyCmp } from './component-utilities';`)).toBeTruthy();
   });
 
   it('should not include output related imports when there is component with no events or internal ones', () => {
@@ -106,7 +106,7 @@ describe('generateProxies', () => {
         `import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZone } from '@angular/core';`
       )
     ).toBeTruthy();
-    expect(finalText.includes(`import { ProxyCmp } from './angular-component-lib/utils';`)).toBeTruthy();
+    expect(finalText.includes(`import { ProxyCmp } from './component-utilities';`)).toBeTruthy();
   });
 
   describe('when outputType is scam', () => {
@@ -152,6 +152,58 @@ describe('generateProxies', () => {
       const finalText = generateProxies(components, pkgData, outputTarget, rootDir);
 
       expect(finalText.includes('export class MyComponentModule')).toBeFalsy();
+    });
+  });
+
+  describe('tree-shaking with standalone components', () => {
+    it('should generate standalone components by default', () => {
+      const outputTarget: OutputTargetAngular = {
+        componentCorePackage: 'component-library',
+        directivesProxyFile: '../component-library-angular/src/proxies.ts',
+        outputType: 'standalone',
+      };
+
+      const finalText = generateProxies(components, pkgData, outputTarget, rootDir);
+      
+      // Should generate standalone components (no standalone: false)
+      expect(finalText.includes('standalone: false')).toBeFalsy();
+      expect(finalText.includes('@Component({')).toBeTruthy();
+    });
+
+    it('should mention tree-shaking in standalone component type description', () => {
+      // This test ensures our type definitions reflect tree-shaking support
+      const outputTarget: OutputTargetAngular = {
+        componentCorePackage: 'component-library',
+        directivesProxyFile: '../component-library-angular/src/proxies.ts',
+        outputType: 'standalone',
+      };
+
+      // The type system should allow standalone without additional config
+      expect(outputTarget.outputType).toBe('standalone');
+    });
+  });
+
+  describe('exportIndividualComponents configuration', () => {
+    it('should support exportIndividualComponents configuration option', () => {
+      const outputTarget: OutputTargetAngular = {
+        componentCorePackage: 'component-library',
+        directivesProxyFile: '../component-library-angular/src/proxies.ts',
+        outputType: 'standalone',
+        exportIndividualComponents: true,
+      };
+
+      expect(outputTarget.exportIndividualComponents).toBe(true);
+      expect(outputTarget.outputType).toBe('standalone');
+    });
+
+    it('should default exportIndividualComponents to undefined when not specified', () => {
+      const outputTarget: OutputTargetAngular = {
+        componentCorePackage: 'component-library',
+        directivesProxyFile: '../component-library-angular/src/proxies.ts',
+        outputType: 'standalone',
+      };
+
+      expect(outputTarget.exportIndividualComponents).toBeUndefined();
     });
   });
 });

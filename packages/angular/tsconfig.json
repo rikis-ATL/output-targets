@@ -13,8 +13,10 @@
     "target": "es2017",
     "noUnusedLocals": true,
     "noUnusedParameters": false,
-    "outDir": "dist"
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "types": ["node", "vitest/globals"]
   },
   "include": ["src"],
-  "exclude": ["node_modules", "src/__tests__"]
+  "exclude": ["node_modules", "src/__tests__", "tests"]
 }

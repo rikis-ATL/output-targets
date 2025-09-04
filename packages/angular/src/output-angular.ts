@@ -1,4 +1,8 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import type { CompilerCtx, ComponentCompilerMeta, ComponentCompilerProperty, Config } from '@stencil/core/internal';
 import type { ComponentInputProperty, OutputTargetAngular, PackageJSON } from './types';
 import {
@@ -16,6 +20,7 @@ import { createAngularComponentDefinition, createComponentTypeDefinition } from 
 import { generateAngularDirectivesFile } from './generate-angular-directives-file';
 import generateValueAccessors from './generate-value-accessors';
 import { generateAngularModuleForComponent } from './generate-angular-modules';
+import { generateIndividualComponents } from './generate-individual-components';
 
 export async function angularDirectiveProxyOutput(
   compilerCtx: CompilerCtx,
@@ -23,42 +28,94 @@ export async function angularDirectiveProxyOutput(
   components: ComponentCompilerMeta[],
   config: Config
 ) {
-  const filteredComponents = getFilteredComponents(outputTarget.excludeComponents, components);
+  // Validate configuration if individual component export is enabled
+  if (outputTarget.exportIndividualComponents) {
+    validateIndividualComponentConfig(outputTarget, config);
+  }
+
+  const filteredComponents = getFilteredComponents(outputTarget.excludeComponents ?? [], components);
   const rootDir = config.rootDir as string;
   const pkgData = await readPackageJson(config, rootDir);
 
-  const finalText = generateProxies(filteredComponents, pkgData, outputTarget, config.rootDir as string);
-
-  await Promise.all([
-    compilerCtx.fs.writeFile(outputTarget.directivesProxyFile, finalText),
+  const baseGenerationPromises = [
     copyResources(config, outputTarget),
     generateAngularDirectivesFile(compilerCtx, filteredComponents, outputTarget),
     generateValueAccessors(compilerCtx, filteredComponents, outputTarget, config),
-  ]);
+  ];
+
+  // Always generate bulk components file (backward compatibility)
+  const finalText = generateProxies(filteredComponents, pkgData, outputTarget, config.rootDir as string);
+  baseGenerationPromises.push(compilerCtx.fs.writeFile(outputTarget.directivesProxyFile, finalText));
+
+  // Generate path alias file for backwards compatibility
+  if (outputTarget.exportIndividualComponents) {
+    const aliasPromise = generatePathAliasFile(compilerCtx, outputTarget, filteredComponents);
+    baseGenerationPromises.push(aliasPromise);
+  }
+
+  // Generate individual component files when enabled
+  const individualComponentPromises = outputTarget.exportIndividualComponents
+    ? [generateIndividualComponents(compilerCtx, filteredComponents, outputTarget)]
+    : [];
+
+  await Promise.all([...baseGenerationPromises, ...individualComponentPromises]);
 }
 
 function getFilteredComponents(excludeComponents: string[] = [], cmps: ComponentCompilerMeta[]) {
   return sortBy(cmps, (cmp) => cmp.tagName).filter((c) => !excludeComponents.includes(c.tagName) && !c.internal);
 }
 
+/**
+ * Validates the configuration when individual component export is enabled
+ */
+function validateIndividualComponentConfig(outputTarget: OutputTargetAngular, config: Config) {
+  if (outputTarget.exportIndividualComponents && outputTarget.outputType !== 'standalone') {
+    throw new Error(
+      'exportIndividualComponents can only be used with outputType: "standalone". ' +
+        'Individual component exports require standalone components for optimal tree-shaking.'
+    );
+  }
+
+  // Check if dist-custom-elements output target is configured
+  const hasCustomElementsOutput = config.outputTargets?.some((target) => target.type === 'dist-custom-elements');
+
+  if (!hasCustomElementsOutput) {
+    throw new Error(
+      'exportIndividualComponents requires a "dist-custom-elements" output target to be configured. ' +
+        'Add { type: "dist-custom-elements", customElementsExportBehavior: "single-export-module" } ' +
+        'to your outputTargets array in stencil.config.ts'
+    );
+  }
+
+  // Set default customElementsDir if not provided
+  if (!outputTarget.customElementsDir) {
+    outputTarget.customElementsDir = 'components';
+  }
+}
+
 async function copyResources(config: Config, outputTarget: OutputTargetAngular) {
   if (!config.sys || !config.sys.copy || !config.sys.glob) {
     throw new Error('stencil is not properly initialized at this step. Notify the developer');
   }
-  const srcDirectory = path.join(__dirname, '..', 'angular-component-lib');
-  const destDirectory = path.join(path.dirname(outputTarget.directivesProxyFile), 'angular-component-lib');
+
+  const baseDestDirectory = path.dirname(outputTarget.directivesProxyFile);
+
+  // Copy component-utilities from resources directory
+  // These utilities provide the runtime bridge between Angular and Stencil components
+  const componentUtilitiesSrc = path.join(__dirname, '..', 'resources', 'component-utilities');
+  const componentUtilitiesDest = path.join(baseDestDirectory, 'component-utilities');
 
   return config.sys.copy(
     [
       {
-        src: srcDirectory,
-        dest: destDirectory,
+        src: componentUtilitiesSrc,
+        dest: componentUtilitiesDest,
         keepDirStructure: false,
         warn: false,
         ignore: [],
       },
     ],
-    srcDirectory
+    baseDestDirectory
   );
 }
 
@@ -101,7 +158,7 @@ export function generateProxies(
 /* auto-generated angular directive proxies */
 ${createImportStatement(angularCoreImports, '@angular/core')}
 
-${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n`;
+${createImportStatement(componentLibImports, './component-utilities')}\n`;
   /**
    * Generate JSX import type from correct location.
    * When using custom elements build, we need to import from
@@ -125,14 +182,17 @@ ${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n
    * so that they do not conflict with the Angular wrapper names. For example,
    * IonButton would be imported as IonButtonCmp so as to not conflict with the
    * IonButton Angular Component that takes in the Web Component as a parameter.
+   *
+   * Generate bulk imports for backward compatibility.
+   * Individual components will also import their own defineCustomElement functions when in standalone mode.
    */
   if (isCustomElementsBuild && outputTarget.componentCorePackage !== undefined) {
     const cmpImports = components.map((component) => {
       const pascalImport = dashToPascalCase(component.tagName);
 
-      return `import { defineCustomElement as define${pascalImport} } from '${normalizePath(
+      return `import { defineCustomElement${pascalImport} as define${pascalImport} } from '${normalizePath(
         outputTarget.componentCorePackage
-      )}/${outputTarget.customElementsDir}/${component.tagName}.js';`;
+      )}/${outputTarget.customElementsDir}/index.js';`;
     });
 
     sourceImports = cmpImports.join('\n');
@@ -150,6 +210,8 @@ ${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n
 
   const { componentCorePackage, customElementsDir } = outputTarget;
 
+  // Generate bulk component definitions for backward compatibility
+  // Individual components will also be generated separately for tree-shaking when in standalone mode
   for (let cmpMeta of components) {
     const tagNameAsPascal = dashToPascalCase(cmpMeta.tagName);
 
@@ -213,3 +275,25 @@ ${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n
 
 const GENERATED_DTS = 'components.d.ts';
 const IMPORT_TYPES = 'Components';
+
+/**
+ * Generates a path alias file that re-exports individual components from the main components directory.
+ * This allows us to maintain backwards compatibility while using a single source directory.
+ */
+async function generatePathAliasFile(
+  compilerCtx: CompilerCtx, 
+  outputTarget: OutputTargetAngular, 
+  components: ComponentCompilerMeta[]
+) {
+  const baseDir = path.dirname(outputTarget.directivesProxyFile);
+  
+  // Create a re-export file that points to the main components directory
+  const reExportContent = `/* Auto-generated path alias for backwards compatibility */
+/* This file re-exports from the main components directory to maintain existing import paths */
+
+export * from '../components';
+`;
+
+  const reExportPath = path.join(baseDir, 'components.ts');
+  await compilerCtx.fs.writeFile(reExportPath, reExportContent);
+}

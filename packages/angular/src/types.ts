@@ -2,7 +2,7 @@
  * The type of output that can be generated with the Angular output target.
  * - `component` - Generate many component wrappers tied to a single Angular module (lazy/hydrated approach).
  * - `scam` - Generate a Single Component Angular Module for each component.
- * - `standalone` - Generates standalone components.
+ * - `standalone` - Generates standalone components with automatic tree-shaking support.
  */
 export type OutputType = 'component' | 'scam' | 'standalone';
 
@@ -28,6 +28,22 @@ export interface OutputTargetAngular {
    * - `standalone` - (default) Generates standalone components.
    */
   outputType?: OutputType;
+  /**
+   * When true, generates individual component files for optimal tree-shaking.
+   * This enables imports like: import { MyButton } from '@my-lib/components/my-button'
+   *
+   * REQUIREMENTS:
+   * - Only works with outputType: 'standalone'
+   * - Provides better TypeScript interface support than legacy bulk approach
+   *
+   * BENEFITS:
+   * - Enables tree-shaking for optimal bundle sizes
+   * - Better TypeScript IntelliSense and type checking
+   * - Component-level imports for maximum optimization
+   *
+   * @default false
+   */
+  exportIndividualComponents?: boolean;
   /**
    * Experimental (!)
    * When true, tries to inline the properties of components. This is required to enable Angular Language Service

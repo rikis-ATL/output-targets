@@ -14,8 +14,7 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist/",
-    "resources/",
-    "angular-component-lib/"
+    "resources/"
   ],
   "publishConfig": {
     "access": "public"

@@ -54,6 +54,36 @@ export const config: Config = {
 | `directivesArrayFile`  | The output file of a constant of all the generated component wrapper classes. Used for easily declaring and exporting the generated components from an `NgModule`. This file path should point to a location within your Angular library/project.                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `valueAccessorConfigs` | The configuration object for how individual web components behave with Angular control value accessors.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `excludeComponents`    | An array of tag names to exclude from generating component wrappers for. This is helpful when have a custom framework implementation of a specific component or need to extend the base component wrapper behavior.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `outputType`           | Specifies the type of output to be generated. It can take one of the following values: <br />1. `component`: Generates all the component wrappers to be declared on an Angular module. This option is required for Stencil projects using the `dist` hydrated output.<br /> 2. `scam`: Generates a separate Angular module for each component.<br /> 3. `standalone`: Generates standalone component wrappers.<br /> Both `scam` and `standalone` options are compatible with the `dist-custom-elements` output. <br />Note: Please choose the appropriate `outputType` based on your project's requirements and the desired output structure. Defaults to `component`. |
+| `outputType`           | Specifies the type of output to be generated. It can take one of the following values: <br />1. `component`: Generates all the component wrappers to be declared on an Angular module. This option is required for Stencil projects using the `dist` hydrated output.<br /> 2. `scam`: Generates a separate Angular module for each component.<br /> 3. `standalone`: Generates standalone component wrappers with automatic tree-shaking support.<br /> Both `scam` and `standalone` options are compatible with the `dist-custom-elements` output. <br />Note: Please choose the appropriate `outputType` based on your project's requirements and the desired output structure. Defaults to `component`. |
 | `customElementsDir`    | This is the directory where the custom elements are imported from when using the [Custom Elements Bundle](https://stenciljs.com/docs/custom-elements). Defaults to the `components` directory. Only applies for `outputType: "scam"` or `outputType: "standalone"`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `inlineProperties` | Experimental. When true, tries to inline the properties of components. This is required to enable Angular Language Service to type-check and show jsdocs when using the components in html-templates.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
+## Tree-Shaking Support
+
+When using `outputType: "standalone"`, the output target enables tree-shaking by generating individual component files. This can reduce bundle sizes by 60-90% for applications using only a subset of components.
+
+**Configuration:**
+```ts
+export const config: Config = {
+  outputTargets: [
+    { type: 'dist-custom-elements' }, // Required
+    angularOutputTarget({
+      componentCorePackage: 'my-component-library',
+      directivesProxyFile: '../my-angular-lib/src/directives/proxies.ts',
+      outputType: 'standalone' // Enables tree-shaking
+    })
+  ]
+};
+```
+
+**Usage:**
+```ts
+// Tree-shakable: only imports specific components
+import { MyButton } from 'my-angular-lib/components/my-button';
+
+// Bulk import: imports multiple components (still available)
+import { MyButton, MyCard } from 'my-angular-lib/components';
+
+// Traditional: imports entire library (backward compatible)
+import { MyButton } from 'my-angular-lib';
+```

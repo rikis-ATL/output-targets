@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+// Legacy bulk import - imports all components (larger bundle size)
 import { MyComponent, MyCounter, MyToggle } from 'component-library-angular';
 import { ButtonTests } from './button-tests/button-tests';
 import { CheckboxTests } from './checkbox-tests/checkbox-tests';

@@ -62,8 +62,10 @@ export const config: Config = {
   outputTargets: [
     angularOutputTarget({
       componentCorePackage: 'component-library',
+      outputType: 'standalone', // Enables tree-shaking with individual component exports
+      exportIndividualComponents: true, // Enables single source directory with path aliases
       directivesProxyFile: '../component-library-angular/projects/library/src/directives/proxies.ts',
-      valueAccessorConfigs: angularValueAccessorBindings
+      valueAccessorConfigs: angularValueAccessorBindings,
     }),
     reactOutputTarget({
       outDir: '../component-library-react/src',
@@ -82,6 +84,7 @@ export const config: Config = {
     }),
     {
       type: 'dist-custom-elements',
+      customElementsExportBehavior: 'single-export-module', // Required for tree-shaking
       externalRuntime: false,
       dir: 'components'
     },

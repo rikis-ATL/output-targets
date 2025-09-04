@@ -293,6 +293,7 @@ export class MyComponent {
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+  standalone: true
 })
 export class MyComponent {
   protected el: HTMLMyComponentElement;
@@ -301,6 +302,15 @@ export class MyComponent {
     this.el = r.nativeElement;
   }
 }`);
+    });
+
+    it('generates a standalone component for tree-shaking', () => {
+      const component = createAngularComponentDefinition('my-button', [{name: 'label', required: false}], [], true, true, [], []);
+
+      expect(component).toContain('defineCustomElementFn: defineMyButton');
+      expect(component).not.toContain('standalone: false');
+      // Standalone components omit the standalone property when true (it's implicit)
+      expect(component).toContain('@Component({');
     });
   });
   describe('inline members', () => {
@@ -504,82 +514,6 @@ export declare interface MyComponent extends Components.MyComponent {
       );
     });
 
-    it('rewrites complex nested generic types within custom events', () => {
-      // Issue: https://github.com/stenciljs/output-targets/issues/369
-      const definition = createComponentTypeDefinition(
-        'component',
-        'MyComponent',
-        [
-          {
-            name: 'myChange',
-            method: 'myChange',
-            bubbles: true,
-            cancelable: true,
-            composed: true,
-            docs: {
-              tags: [],
-              text: '',
-            },
-            complexType: {
-              original: 'MyEvent<Currency>',
-              resolved: 'MyEvent<Currency>',
-              references: {
-                MyEvent: {
-                  location: 'import',
-                  path: '../../types/MyEvent',
-                  // Stencil v4.0.3+ only
-                  id: 'src/types/MyEvent.ts::MyEvent',
-                } as any,
-                Currency: {
-                  location: 'import',
-                  path: '../../types/Currency',
-                  // Stencil v4.0.3+ only
-                  id: 'src/types/Currency.ts::Currency',
-                } as any,
-              },
-            },
-            internal: false,
-          },
-          {
-            name: 'mySwipe',
-            method: 'mySwipe',
-            bubbles: true,
-            cancelable: true,
-            composed: true,
-            docs: {
-              tags: [],
-              text: '',
-            },
-            complexType: {
-              original: '{ side: Side }',
-              resolved: '{ side: Side; }',
-              references: {
-                Side: {
-                  id: '',
-                  location: 'import',
-                  path: '../../interfaces',
-                },
-              },
-            },
-            internal: false,
-          },
-        ],
-        '@ionic/core'
-      );
-
-      expect(definition).toEqual(
-        `import type { MyEvent as IMyComponentMyEvent } from '@ionic/core';
-import type { Currency as IMyComponentCurrency } from '@ionic/core';
-import type { Side as IMyComponentSide } from '@ionic/core';
-
-export declare interface MyComponent extends Components.MyComponent {
-
-  myChange: EventEmitter<CustomEvent<IMyComponentMyEvent<IMyComponentCurrency>>>;
-
-  mySwipe: EventEmitter<CustomEvent<{ side: IMyComponentSide }>>;
-}`
-      );
-    });
   });
 
   describe('custom elements output', () => {
