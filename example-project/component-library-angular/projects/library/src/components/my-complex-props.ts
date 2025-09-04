@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZo
 
 import { ProxyCmp } from '../angular-component-lib/utils';
 
-import type { Components } from 'component-library/components';
+import type { Components } from 'component-library';
 
 
-import { defineCustomElement as defineMyComplexProps } from 'component-library/components/my-complex-props.js';
+import { defineMyComplexProps } from './definitions';
 
 export declare interface MyComplexProps extends Components.MyComplexProps {}
 

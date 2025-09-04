@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZo
 
 import { ProxyCmp } from '../angular-component-lib/utils';
 
-import type { Components } from 'component-library/components';
+import type { Components } from 'component-library';
 
 
-import { defineCustomElement as defineMyCheckbox } from 'component-library/components/my-checkbox.js';
+import { defineMyCheckbox } from './definitions';
 
 import type { CheckboxChangeEventDetail as IMyCheckboxCheckboxChangeEventDetail } from 'component-library/components';
 import type { CheckboxChangeNestedEventDetail as IMyCheckboxCheckboxChangeNestedEventDetail } from 'component-library/components';

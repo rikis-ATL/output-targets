@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZo
 
 import { ProxyCmp } from '../angular-component-lib/utils';
 
-import type { Components } from 'component-library/components';
+import type { Components } from 'component-library';
 
 
-import { defineCustomElement as defineMyListItem } from 'component-library/components/my-list-item.js';
+import { defineMyListItem } from './definitions';
 
 export declare interface MyListItem extends Components.MyListItem {}
 

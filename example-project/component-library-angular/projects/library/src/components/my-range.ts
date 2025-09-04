@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZo
 
 import { ProxyCmp } from '../angular-component-lib/utils';
 
-import type { Components } from 'component-library/components';
+import type { Components } from 'component-library';
 
 
-import { defineCustomElement as defineMyRange } from 'component-library/components/my-range.js';
+import { defineMyRange } from './definitions';
 
 import type { RangeChangeEventDetail as IMyRangeRangeChangeEventDetail } from 'component-library/components';
 

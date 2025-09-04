@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZo
 
 import { ProxyCmp } from '../angular-component-lib/utils';
 
-import type { Components } from 'component-library/components';
+import type { Components } from 'component-library';
 
 
-import { defineCustomElement as defineMyButton } from 'component-library/components/my-button.js';
+import { defineMyButton } from './definitions';
 
 export declare interface MyButton extends Components.MyButton {
   /**

@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZo
 
 import { ProxyCmp } from '../angular-component-lib/utils';
 
-import type { Components } from 'component-library/components';
+import type { Components } from 'component-library';
 
 
-import { defineCustomElement as defineMyToggle } from 'component-library/components/my-toggle.js';
+import { defineMyToggle } from './definitions';
 
 export declare interface MyToggle extends Components.MyToggle {}
 

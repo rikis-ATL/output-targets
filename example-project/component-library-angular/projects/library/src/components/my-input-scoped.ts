@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZo
 
 import { ProxyCmp } from '../angular-component-lib/utils';
 
-import type { Components } from 'component-library/components';
+import type { Components } from 'component-library';
 
 
-import { defineCustomElement as defineMyInputScoped } from 'component-library/components/my-input-scoped.js';
+import { defineMyInputScoped } from './definitions';
 
 import type { InputChangeEventDetail as IMyInputScopedInputChangeEventDetail } from 'component-library/components';
 

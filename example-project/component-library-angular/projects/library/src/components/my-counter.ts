@@ -4,10 +4,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, NgZo
 
 import { ProxyCmp } from '../angular-component-lib/utils';
 
-import type { Components } from 'component-library/components';
+import type { Components } from 'component-library';
 
 
-import { defineCustomElement as defineMyCounter } from 'component-library/components/my-counter.js';
+import { defineMyCounter } from './definitions';
 
 export declare interface MyCounter extends Components.MyCounter {
   /**
