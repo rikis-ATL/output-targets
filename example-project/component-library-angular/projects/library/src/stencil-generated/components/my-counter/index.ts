@@ -4,4 +4,5 @@
  * import { MyCounter } from '@my-lib/my-counter';
  */
 
-export { MyCounter } from '../../components/my-counter';
+// Import directly from proxies.ts to avoid circular reference
+export { MyCounter } from '../../../proxies';

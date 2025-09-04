@@ -4,4 +4,5 @@
  * import { MyToggle } from '@my-lib/my-toggle';
  */
 
-export { MyToggle } from '../../components/my-toggle';
+// Import directly from proxies.ts to avoid circular reference
+export { MyToggle } from '../../../proxies';

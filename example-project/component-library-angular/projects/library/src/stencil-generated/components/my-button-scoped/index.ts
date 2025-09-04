@@ -4,4 +4,5 @@
  * import { MyButtonScoped } from '@my-lib/my-button-scoped';
  */
 
-export { MyButtonScoped } from '../../components/my-button-scoped';
+// Import directly from proxies.ts to avoid circular reference
+export { MyButtonScoped } from '../../../proxies';

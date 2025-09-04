@@ -4,4 +4,5 @@
  * import { MyComponentScoped } from '@my-lib/my-component-scoped';
  */
 
-export { MyComponentScoped } from '../../components/my-component-scoped';
+// Import directly from proxies.ts to avoid circular reference
+export { MyComponentScoped } from '../../../proxies';

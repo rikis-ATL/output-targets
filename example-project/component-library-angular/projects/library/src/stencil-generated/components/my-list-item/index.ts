@@ -4,4 +4,5 @@
  * import { MyListItem } from '@my-lib/my-list-item';
  */
 
-export { MyListItem } from '../../components/my-list-item';
+// Import directly from proxies.ts to avoid circular reference
+export { MyListItem } from '../../../proxies';

@@ -4,4 +4,5 @@
  * import { MyInput } from '@my-lib/my-input';
  */
 
-export { MyInput } from '../../components/my-input';
+// Import directly from proxies.ts to avoid circular reference
+export { MyInput } from '../../../proxies';

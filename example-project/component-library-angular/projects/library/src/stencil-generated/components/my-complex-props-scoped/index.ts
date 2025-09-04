@@ -4,4 +4,5 @@
  * import { MyComplexPropsScoped } from '@my-lib/my-complex-props-scoped';
  */
 
-export { MyComplexPropsScoped } from '../../components/my-complex-props-scoped';
+// Import directly from proxies.ts to avoid circular reference
+export { MyComplexPropsScoped } from '../../../proxies';

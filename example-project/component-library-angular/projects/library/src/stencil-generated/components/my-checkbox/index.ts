@@ -4,4 +4,5 @@
  * import { MyCheckbox } from '@my-lib/my-checkbox';
  */
 
-export { MyCheckbox } from '../../components/my-checkbox';
+// Import directly from proxies.ts to avoid circular reference
+export { MyCheckbox } from '../../../proxies';

@@ -4,4 +4,5 @@
  * import { MyPopover } from '@my-lib/my-popover';
  */
 
-export { MyPopover } from '../../components/my-popover';
+// Import directly from proxies.ts to avoid circular reference
+export { MyPopover } from '../../../proxies';

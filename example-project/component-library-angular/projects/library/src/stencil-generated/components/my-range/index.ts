@@ -4,4 +4,5 @@
  * import { MyRange } from '@my-lib/my-range';
  */
 
-export { MyRange } from '../../components/my-range';
+// Import directly from proxies.ts to avoid circular reference
+export { MyRange } from '../../../proxies';

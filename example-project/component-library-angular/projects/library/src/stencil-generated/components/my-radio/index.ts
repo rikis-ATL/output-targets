@@ -4,4 +4,5 @@
  * import { MyRadio } from '@my-lib/my-radio';
  */
 
-export { MyRadio } from '../../components/my-radio';
+// Import directly from proxies.ts to avoid circular reference
+export { MyRadio } from '../../../proxies';
