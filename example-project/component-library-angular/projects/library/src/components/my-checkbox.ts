@@ -45,6 +45,7 @@ For demonstration purposes to be able to test ways to handle more complex events
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['color', 'name', 'checked', 'indeterminate', 'disabled', 'value', 'labelPlacement', 'justify', 'alignment', 'mode'],
   outputs: ['ionChange', 'ionChangeNested', 'ionFocus', 'ionBlur'],
+  standalone: true
 })
 export class MyCheckbox {
   protected el: HTMLMyCheckboxElement;

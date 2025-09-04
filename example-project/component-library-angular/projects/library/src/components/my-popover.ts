@@ -42,6 +42,7 @@ export declare interface MyPopover extends Components.MyPopover {
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [{ name: 'component', required: true }, 'componentProps', 'keyboardClose', 'cssClass', 'backdropDismiss', 'event', 'showBackdrop', 'translucent', 'animated', 'mode'],
   outputs: ['myPopoverDidPresent', 'myPopoverWillPresent', 'myPopoverWillDismiss', 'myPopoverDidDismiss'],
+  standalone: true
 })
 export class MyPopover {
   protected el: HTMLMyPopoverElement;

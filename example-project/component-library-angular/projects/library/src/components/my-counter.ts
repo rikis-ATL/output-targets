@@ -27,6 +27,7 @@ export declare interface MyCounter extends Components.MyCounter {
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['startValue'],
   outputs: ['count'],
+  standalone: true
 })
 export class MyCounter {
   protected el: HTMLMyCounterElement;

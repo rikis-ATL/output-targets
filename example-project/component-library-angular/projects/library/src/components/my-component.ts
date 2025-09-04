@@ -21,6 +21,7 @@ export declare interface MyComponent extends Components.MyComponent {}
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['first', 'middleName', 'last'],
+  standalone: true
 })
 export class MyComponent {
   protected el: HTMLMyComponentElement;

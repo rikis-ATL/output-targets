@@ -20,6 +20,7 @@ export declare interface MyListItem extends Components.MyListItem {}
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+  standalone: true
 })
 export class MyListItem {
   protected el: HTMLMyListItemElement;

@@ -24,21 +24,36 @@ export async function generateIndividualComponents(
   const baseDir = path.dirname(outputTarget.directivesProxyFile);
   const componentsDir = path.join(baseDir, 'components');
 
+  // Also prepare top-level secondary entrypoint wrappers: <libraryRoot>/components[/<tag>]
+  // Top-level components entry points generation is disabled
+
   // Generate individual component files and barrel export
   const componentPromises = components.map((component) =>
     generateIndividualComponentFile(compilerCtx, component, outputTarget, componentsDir)
   );
 
+  // Generate top-level secondary entry points (wrappers that re-export from src/lib)
+  const topLevelWrappersPromises: Promise<any>[] = [];
+
   // Generate barrel export for convenience (with tree-shaking caveats)
   const barrelExportPromise = generateBarrelExport(compilerCtx, components, componentsDir);
+
+  // Generate top-level barrel and ng-package.json for components/
+  const topLevelBarrelPromise = Promise.resolve();
 
   // Generate definitions file for individual component imports
   const definitionsPromise = generateDefinitionsFile(compilerCtx, components, outputTarget, componentsDir);
 
   // Generate individual component files and update package.json exports
   const packageJsonPromise = generatePackageJsonExports(compilerCtx, components, baseDir);
-  await Promise.all([...componentPromises, barrelExportPromise, definitionsPromise, packageJsonPromise]);
-
+  await Promise.all([
+    ...componentPromises,
+    ...topLevelWrappersPromises,
+    barrelExportPromise,
+    topLevelBarrelPromise,
+    definitionsPromise,
+    packageJsonPromise,
+  ]);
 }
 
 // Generate package.json exports configuration for individual components and tree-shaking
@@ -47,58 +62,58 @@ async function generatePackageJsonExports(
   components: ComponentCompilerMeta[],
   baseDir: string
 ) {
-  // Target the library's package.json, not the output target's
-  const libraryPackageJsonPath = path.join(baseDir, '../package.json');
+  // baseDir is the directory of directivesProxyFile, e.g. src/lib/stencil-generated
+  // We need the library root at projects/<lib>, which is three levels up
+  const libraryRoot = path.resolve(baseDir, '../../..');
+  const libraryPackageJsonPath = path.join(libraryRoot, 'package.json');
 
   // Read existing package.json
-  let existingPackageJson = {};
+  let existingPackageJson = {} as any;
   try {
     const existingContent = await compilerCtx.fs.readFile(libraryPackageJsonPath);
     existingPackageJson = JSON.parse(existingContent);
   } catch (e) {
-    // File doesn't exist, use empty object
+    existingPackageJson = {};
   }
 
   // Handle existing exports properly - if it exists and is a string, preserve main export
-  const existingExports = (existingPackageJson as any).exports;
+  const existingExports = existingPackageJson.exports;
   let exports: Record<string, any> = {};
-  
-  // If exports exists and is an object, merge with it
+
   if (existingExports && typeof existingExports === 'object') {
     exports = { ...existingExports };
   } else if (existingExports && typeof existingExports === 'string') {
-    // If it's a string, use it as the main export
-    exports["."] = existingExports;
-  } else {
-    // Default main export - let ng-packagr handle this
-    exports["."] = {
-      types: "./index.d.ts",
-      default: "./fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs"
-    };
+    exports['.'] = existingExports;
   }
-  
-  // Add components barrel export (ng-packagr will build this as a secondary entry point)
-  exports["./components"] = {
-    types: "./components/index.d.ts",
-    default: "./components/index.js"
+
+  // Resolve main FESM path and types path used by ng-packagr
+  const mainTypes = './dist/atui-components/index.d.ts';
+  const mainFesm = './dist/atui-components/fesm2022/alliedtelesis-labs-nz-atui-components-angular.mjs';
+
+  // Map the components barrel and per-component subpaths to the main bundle for runtime,
+  // while keeping types pointing to the global index.d.ts which declares all exports.
+  exports['./components'] = {
+    types: mainTypes,
+    default: mainFesm,
   };
 
-  // Add individual component exports for tree-shaking
-  components.forEach(component => {
+  components.forEach((component) => {
     exports[`./components/${component.tagName}`] = {
-      types: `./components/${component.tagName}.d.ts`,
-      default: `./components/${component.tagName}.js`
+      types: mainTypes,
+      default: mainFesm,
     };
   });
 
   const updatedPackageJson = {
     ...existingPackageJson,
-    sideEffects: false, // Mark as side-effect free for tree-shaking
-    exports
+    sideEffects: false,
+    exports,
   };
 
-  await compilerCtx.fs.writeFile(libraryPackageJsonPath,
-    JSON.stringify(updatedPackageJson, null, 2));
+  await compilerCtx.fs.writeFile(
+    libraryPackageJsonPath,
+    JSON.stringify(updatedPackageJson, null, 2)
+  );
 }
 
 // Export the function to avoid TS6133 unused warning
@@ -198,7 +213,7 @@ import { define${tagNameAsPascal} } from './definitions';`;
   await compilerCtx.fs.writeFile(filePath, fileContent);
 }
 
-
+// Top-level components barrel and per-component wrappers are disabled
 
 /**
  * Generates a definitions file that re-exports all defineCustomElement functions

@@ -29,6 +29,7 @@ export declare interface MyComponentScoped extends Components.MyComponentScoped 
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['first', 'middleName', 'last'],
   outputs: ['myCustomEvent'],
+  standalone: true
 })
 export class MyComponentScoped {
   protected el: HTMLMyComponentScopedElement;

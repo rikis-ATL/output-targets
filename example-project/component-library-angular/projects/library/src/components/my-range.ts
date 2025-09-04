@@ -37,6 +37,7 @@ export declare interface MyRange extends Components.MyRange {
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['color', 'debounce', 'name', 'dualKnobs', 'min', 'max', 'pin', 'snaps', 'step', 'ticks', 'disabled', 'value', 'mode'],
   outputs: ['myChange', 'myFocus', 'myBlur'],
+  standalone: true
 })
 export class MyRange {
   protected el: HTMLMyRangeElement;

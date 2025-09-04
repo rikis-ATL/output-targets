@@ -20,6 +20,7 @@ export declare interface MyListItemScoped extends Components.MyListItemScoped {}
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+  standalone: true
 })
 export class MyListItemScoped {
   protected el: HTMLMyListItemScopedElement;

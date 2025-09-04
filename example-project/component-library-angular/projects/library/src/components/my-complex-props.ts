@@ -21,6 +21,7 @@ export declare interface MyComplexProps extends Components.MyComplexProps {}
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['foo', 'baz', 'quux', 'grault', 'waldo'],
+  standalone: true
 })
 export class MyComplexProps {
   protected el: HTMLMyComplexPropsElement;

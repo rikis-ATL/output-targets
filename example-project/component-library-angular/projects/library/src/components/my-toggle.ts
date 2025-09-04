@@ -20,6 +20,7 @@ export declare interface MyToggle extends Components.MyToggle {}
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+  standalone: true
 })
 export class MyToggle {
   protected el: HTMLMyToggleElement;

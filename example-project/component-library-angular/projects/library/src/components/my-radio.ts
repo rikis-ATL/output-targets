@@ -31,6 +31,7 @@ export declare interface MyRadio extends Components.MyRadio {
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['color', 'name', 'disabled', 'value', 'labelPlacement', 'justify', 'alignment', 'mode'],
   outputs: ['ionFocus', 'ionBlur'],
+  standalone: true
 })
 export class MyRadio {
   protected el: HTMLMyRadioElement;

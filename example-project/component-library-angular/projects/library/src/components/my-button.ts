@@ -31,6 +31,7 @@ export declare interface MyButton extends Components.MyButton {
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['color', 'buttonType', 'disabled', 'expand', 'fill', 'download', 'href', 'rel', 'shape', 'size', 'strong', 'target', 'type', 'mode'],
   outputs: ['myFocus', 'myBlur'],
+  standalone: true
 })
 export class MyButton {
   protected el: HTMLMyButtonElement;

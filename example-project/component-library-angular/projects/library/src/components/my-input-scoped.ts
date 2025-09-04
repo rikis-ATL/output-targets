@@ -42,6 +42,7 @@ export declare interface MyInputScoped extends Components.MyInputScoped {
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['color', 'accept', 'autocapitalize', 'autocomplete', 'autocorrect', 'autofocus', 'clearInput', 'clearOnEdit', 'disabled', 'enterkeyhint', 'inputmode', 'max', 'maxlength', 'min', 'minlength', 'multiple', 'name', 'pattern', 'placeholder', 'readonly', 'required', 'spellcheck', 'step', 'size', 'type', 'value', 'mode'],
   outputs: ['myInput', 'myChange', 'myBlur', 'myFocus'],
+  standalone: true
 })
 export class MyInputScoped {
   protected el: HTMLMyInputScopedElement;

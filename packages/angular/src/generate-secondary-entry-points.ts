@@ -104,11 +104,12 @@ async function generateComponentImplementation(
  * ng-packagr automatically discovers directories with package.json files as secondary entry points.
  */
 function generateSecondaryEntryPointPackageJson(): string {
-  // Minimal package.json for ng-packagr discovery
-  // ng-packagr will automatically treat this directory as a secondary entry point
+  // Minimal ng-packagr config for a secondary entry point
   const packageJson = {
-    "ngPackage": {}
+    lib: {
+      entryFile: 'index.ts'
+    }
   };
-  
+
   return JSON.stringify(packageJson, null, 2) + '\n';
 }

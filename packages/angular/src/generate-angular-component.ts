@@ -109,7 +109,9 @@ export const createAngularComponentDefinition = (
 
   let standaloneOption = '';
 
-  if (!standalone) {
+  if (standalone) {
+    standaloneOption = `\n  standalone: true`;
+  } else {
     standaloneOption = `\n  standalone: false`;
   }
 
