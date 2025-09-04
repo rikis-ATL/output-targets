@@ -176,7 +176,7 @@ ${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n
 
       return `import { defineCustomElement${pascalImport} as define${pascalImport} } from '${normalizePath(
         outputTarget.componentCorePackage
-      )}/${outputTarget.customElementsDir}';`;
+      )}/${outputTarget.customElementsDir}/index.js';`;
     });
 
     sourceImports = cmpImports.join('\n');

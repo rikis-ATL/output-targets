@@ -2,7 +2,6 @@ import path from 'path';
 import type { CompilerCtx, ComponentCompilerMeta } from '@stencil/core/internal';
 import type { OutputTargetAngular } from './types';
 import { dashToPascalCase } from './utils';
-import { createAngularComponentDefinition, createComponentTypeDefinition } from './generate-angular-component';
 
 /**
  * Generates secondary entry points for Angular libraries using the Angular Material pattern.
@@ -86,82 +85,17 @@ async function generateComponentImplementation(
   outputTarget: OutputTargetAngular
 ): Promise<string> {
   const tagNameAsPascal = dashToPascalCase(component.tagName);
-  
-  // Filter internal properties
-  const filterInternalProps = (prop: { name: string; internal: boolean }) => !prop.internal;
-  const internalProps = component.properties ? component.properties.filter(filterInternalProps) : [];
-  const inputs = internalProps.map(prop => ({ name: prop.name, required: prop.required ?? false }));
-
-  if (component.virtualProperties) {
-    inputs.push(...component.virtualProperties.map(prop => ({ name: prop.name, required: false })));
-  }
-
-  const methods = component.methods ? component.methods.filter(filterInternalProps).map(method => method.name) : [];
-  const inlineComponentProps = outputTarget.inlineProperties ? internalProps : [];
-
-  // Angular imports
-  const angularImports = [
-    'ChangeDetectionStrategy',
-    'ChangeDetectorRef', 
-    'Component',
-    'ElementRef',
-    'NgZone'
-  ];
-
-  // Add EventEmitter and Output if component has events
-  const hasEvents = component.events && component.events.some(event => !event.internal);
-  if (hasEvents) {
-    angularImports.push('EventEmitter', 'Output');
-  }
-
-  const imports = `/* tslint:disable */
-/* auto-generated angular directive proxy for ${component.tagName} */
-import { ${angularImports.join(', ')} } from '@angular/core';
-
-import { ProxyCmp } from './src/lib/stencil-generated/angular-component-lib/utils';
-
-import type { Components } from '${outputTarget.componentCorePackage}';
-import { defineCustomElement${tagNameAsPascal} as define${tagNameAsPascal} } from '${outputTarget.componentCorePackage}/components';`;
-
-  // Event types are handled by the main Components interface
-  let eventImports = '';
-  if (hasEvents) {
-    const eventTypes = component.events?.filter(event => !event.internal).map(event => {
-      return `import type { ${event.complexType?.original || 'any'} as I${tagNameAsPascal}${event.name.charAt(0).toUpperCase() + event.name.slice(1)} } from '${outputTarget.componentCorePackage}/components';`;
-    }).join('\n') || '';
-    
-    if (eventTypes) {
-      eventImports = '\n' + eventTypes;
-    }
-  }
-
-  // Generate component definition with standalone: true
-  const componentDefinition = createAngularComponentDefinition(
-    component.tagName,
-    inputs,
-    methods,
-    true, // includeImportCustomElements = true for individual files
-    true, // standalone = true for tree-shaking
-    inlineComponentProps,
-    component.events || []
-  );
-
-  // Generate type definition
-  const componentTypeDefinition = createComponentTypeDefinition(
-    'standalone',
-    tagNameAsPascal,
-    component.events || [],
-    outputTarget.componentCorePackage,
-    outputTarget.customElementsDir
-  );
+  const relPathToProxy = `../src/lib/stencil-generated/components/${component.tagName}`;
 
   return [
-    imports,
-    eventImports,
+    '/*',
+    ` * Secondary entry point for ${component.tagName}`,
+    ' * Enables tree-shaking by allowing imports like:',
+    ` * import { ${tagNameAsPascal} } from '@my-lib/${component.tagName}';`,
+    ' */',
     '',
-    componentTypeDefinition,
-    '',
-    componentDefinition
+    `export { ${tagNameAsPascal} } from '${relPathToProxy}';`,
+    ''
   ].join('\n');
 }
 

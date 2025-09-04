@@ -4,11 +4,30 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Even
 
 import { ProxyCmp } from './angular-component-lib/utils';
 
-import type { Components } from 'component-library';
+import type { Components } from 'component-library/components';
 
-import { defineCustomElementMyButton, defineCustomElementMyButtonScoped, defineCustomElementMyCheckbox, defineCustomElementMyComplexProps, defineCustomElementMyComplexPropsScoped, defineCustomElementMyComponent, defineCustomElementMyComponentScoped, defineCustomElementMyCounter, defineCustomElementMyInput, defineCustomElementMyInputScoped, defineCustomElementMyList, defineCustomElementMyListItem, defineCustomElementMyListItemScoped, defineCustomElementMyListScoped, defineCustomElementMyPopover, defineCustomElementMyRadio, defineCustomElementMyRadioGroup, defineCustomElementMyRange, defineCustomElementMyToggle, defineCustomElementMyToggleContent } from 'component-library/components/index.js';
+import { defineCustomElementMyButton as defineMyButton } from 'component-library/components/index.js';
+import { defineCustomElementMyButtonScoped as defineMyButtonScoped } from 'component-library/components/index.js';
+import { defineCustomElementMyCheckbox as defineMyCheckbox } from 'component-library/components/index.js';
+import { defineCustomElementMyComplexProps as defineMyComplexProps } from 'component-library/components/index.js';
+import { defineCustomElementMyComplexPropsScoped as defineMyComplexPropsScoped } from 'component-library/components/index.js';
+import { defineCustomElementMyComponent as defineMyComponent } from 'component-library/components/index.js';
+import { defineCustomElementMyComponentScoped as defineMyComponentScoped } from 'component-library/components/index.js';
+import { defineCustomElementMyCounter as defineMyCounter } from 'component-library/components/index.js';
+import { defineCustomElementMyInput as defineMyInput } from 'component-library/components/index.js';
+import { defineCustomElementMyInputScoped as defineMyInputScoped } from 'component-library/components/index.js';
+import { defineCustomElementMyList as defineMyList } from 'component-library/components/index.js';
+import { defineCustomElementMyListItem as defineMyListItem } from 'component-library/components/index.js';
+import { defineCustomElementMyListItemScoped as defineMyListItemScoped } from 'component-library/components/index.js';
+import { defineCustomElementMyListScoped as defineMyListScoped } from 'component-library/components/index.js';
+import { defineCustomElementMyPopover as defineMyPopover } from 'component-library/components/index.js';
+import { defineCustomElementMyRadio as defineMyRadio } from 'component-library/components/index.js';
+import { defineCustomElementMyRadioGroup as defineMyRadioGroup } from 'component-library/components/index.js';
+import { defineCustomElementMyRange as defineMyRange } from 'component-library/components/index.js';
+import { defineCustomElementMyToggle as defineMyToggle } from 'component-library/components/index.js';
+import { defineCustomElementMyToggleContent as defineMyToggleContent } from 'component-library/components/index.js';
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyButton,
+  defineCustomElementFn: defineMyButton,
   inputs: ['buttonType', 'color', 'disabled', 'download', 'expand', 'fill', 'href', 'mode', 'rel', 'shape', 'size', 'strong', 'target', 'type']
 })
 @Component({
@@ -43,7 +62,7 @@ export declare interface MyButton extends Components.MyButton {
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyButtonScoped,
+  defineCustomElementFn: defineMyButtonScoped,
   inputs: ['buttonType', 'color', 'disabled', 'download', 'expand', 'fill', 'href', 'mode', 'rel', 'shape', 'size', 'strong', 'target', 'type']
 })
 @Component({
@@ -78,7 +97,7 @@ export declare interface MyButtonScoped extends Components.MyButtonScoped {
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyCheckbox,
+  defineCustomElementFn: defineMyCheckbox,
   inputs: ['alignment', 'checked', 'color', 'disabled', 'indeterminate', 'justify', 'labelPlacement', 'mode', 'name', 'value']
 })
 @Component({
@@ -129,7 +148,7 @@ For demonstration purposes to be able to test ways to handle more complex events
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyComplexProps,
+  defineCustomElementFn: defineMyComplexProps,
   inputs: ['baz', 'foo', 'grault', 'quux', 'waldo']
 })
 @Component({
@@ -152,7 +171,7 @@ export declare interface MyComplexProps extends Components.MyComplexProps {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyComplexPropsScoped,
+  defineCustomElementFn: defineMyComplexPropsScoped,
   inputs: ['baz', 'foo', 'grault', 'quux', 'waldo']
 })
 @Component({
@@ -175,7 +194,7 @@ export declare interface MyComplexPropsScoped extends Components.MyComplexPropsS
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyComponent,
+  defineCustomElementFn: defineMyComponent,
   inputs: ['first', 'last', 'middleName']
 })
 @Component({
@@ -198,7 +217,7 @@ export declare interface MyComponent extends Components.MyComponent {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyComponentScoped,
+  defineCustomElementFn: defineMyComponentScoped,
   inputs: ['first', 'last', 'middleName']
 })
 @Component({
@@ -230,7 +249,7 @@ export declare interface MyComponentScoped extends Components.MyComponentScoped 
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyCounter,
+  defineCustomElementFn: defineMyCounter,
   inputs: ['startValue']
 })
 @Component({
@@ -260,7 +279,7 @@ export declare interface MyCounter extends Components.MyCounter {
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyInput,
+  defineCustomElementFn: defineMyInput,
   inputs: ['accept', 'autocapitalize', 'autocomplete', 'autocorrect', 'autofocus', 'clearInput', 'clearOnEdit', 'color', 'disabled', 'enterkeyhint', 'inputmode', 'max', 'maxlength', 'min', 'minlength', 'mode', 'multiple', 'name', 'pattern', 'placeholder', 'readonly', 'required', 'size', 'spellcheck', 'step', 'type', 'value'],
   methods: ['setFocus', 'getInputElement']
 })
@@ -308,7 +327,7 @@ export declare interface MyInput extends Components.MyInput {
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyInputScoped,
+  defineCustomElementFn: defineMyInputScoped,
   inputs: ['accept', 'autocapitalize', 'autocomplete', 'autocorrect', 'autofocus', 'clearInput', 'clearOnEdit', 'color', 'disabled', 'enterkeyhint', 'inputmode', 'max', 'maxlength', 'min', 'minlength', 'mode', 'multiple', 'name', 'pattern', 'placeholder', 'readonly', 'required', 'size', 'spellcheck', 'step', 'type', 'value'],
   methods: ['setFocus', 'getInputElement']
 })
@@ -356,7 +375,7 @@ export declare interface MyInputScoped extends Components.MyInputScoped {
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyList
+  defineCustomElementFn: defineMyList
 })
 @Component({
   selector: 'my-list',
@@ -378,7 +397,7 @@ export declare interface MyList extends Components.MyList {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyListItem
+  defineCustomElementFn: defineMyListItem
 })
 @Component({
   selector: 'my-list-item',
@@ -400,7 +419,7 @@ export declare interface MyListItem extends Components.MyListItem {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyListItemScoped
+  defineCustomElementFn: defineMyListItemScoped
 })
 @Component({
   selector: 'my-list-item-scoped',
@@ -422,7 +441,7 @@ export declare interface MyListItemScoped extends Components.MyListItemScoped {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyListScoped
+  defineCustomElementFn: defineMyListScoped
 })
 @Component({
   selector: 'my-list-scoped',
@@ -444,7 +463,7 @@ export declare interface MyListScoped extends Components.MyListScoped {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyPopover,
+  defineCustomElementFn: defineMyPopover,
   inputs: ['animated', 'backdropDismiss', 'component', 'componentProps', 'cssClass', 'event', 'keyboardClose', 'mode', 'showBackdrop', 'translucent'],
   methods: ['present', 'dismiss', 'onDidDismiss', 'onWillDismiss']
 })
@@ -492,7 +511,7 @@ export declare interface MyPopover extends Components.MyPopover {
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyRadio,
+  defineCustomElementFn: defineMyRadio,
   inputs: ['alignment', 'color', 'disabled', 'justify', 'labelPlacement', 'mode', 'name', 'value']
 })
 @Component({
@@ -527,7 +546,7 @@ export declare interface MyRadio extends Components.MyRadio {
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyRadioGroup,
+  defineCustomElementFn: defineMyRadioGroup,
   inputs: ['allowEmptySelection', 'compareWith', 'name', 'value']
 })
 @Component({
@@ -561,7 +580,7 @@ This event will not emit when programmatically setting the `value` property.
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyRange,
+  defineCustomElementFn: defineMyRange,
   inputs: ['color', 'debounce', 'disabled', 'dualKnobs', 'max', 'min', 'mode', 'name', 'pin', 'snaps', 'step', 'ticks', 'value']
 })
 @Component({
@@ -603,7 +622,7 @@ export declare interface MyRange extends Components.MyRange {
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyToggle
+  defineCustomElementFn: defineMyToggle
 })
 @Component({
   selector: 'my-toggle',
@@ -625,7 +644,7 @@ export declare interface MyToggle extends Components.MyToggle {}
 
 
 @ProxyCmp({
-  defineCustomElementFn: defineCustomElementMyToggleContent,
+  defineCustomElementFn: defineMyToggleContent,
   inputs: ['visible']
 })
 @Component({
