@@ -9,7 +9,7 @@ import type { Components } from 'component-library';
 
 import { defineMyComplexProps } from './definitions';
 
-export declare interface MyComplexProps extends Components.MyComplexProps {}
+
 
 @ProxyCmp({
   defineCustomElementFn: defineMyComplexProps,

@@ -102,6 +102,10 @@
     "./components/my-toggle-content": {
       "types": "./components/my-toggle-content.d.ts",
       "default": "./components/my-toggle-content.js"
+    },
+    "./my-component": {
+      "types": "./my-component.d.ts",
+      "default": "./my-component.js"
     }
   }
 }

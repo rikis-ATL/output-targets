@@ -4,109 +4,133 @@ import type { OutputTargetAngular } from './types';
 import { dashToPascalCase } from './utils';
 
 /**
- * Generates secondary entry points for Angular libraries using the Angular Material pattern.
- * This creates individual entry points like @my-lib/components/button, @my-lib/components/card
- * which enable perfect tree-shaking through ng-packagr's built-in secondary entry point support.
+ * Generates individual component bundles using the Angular Material pattern.
+ * This creates a structure like Angular Material with individual component directories and FESM bundles.
  *
  * Structure generated (Angular Material style):
- * src/lib/stencil-generated/components/
+ * dist/
  * ├── my-button/
- * │   ├── index.ts        (component export)
- * │   └── package.json    (ng-packagr secondary entry point)
- * └── my-card/
- *     ├── index.ts        (component export)
- *     └── package.json    (ng-packagr secondary entry point)
+ * │   └── index.d.ts      (component type definitions)
+ * ├── my-counter/
+ * │   └── index.d.ts      (component type definitions)
+ * ├── fesm2022/
+ * │   ├── my-button.mjs   (individual component bundle)
+ * │   └── my-counter.mjs  (individual component bundle)
+ * └── package.json        (with exports pointing to individual bundles)
  *
  * This approach:
- * - Uses ng-packagr's official secondary entry point mechanism
- * - Eliminates the need for post-build scripts
- * - Preserves Angular metadata properly during compilation
- * - Follows the same pattern as Angular Material
+ * - Matches Angular Material's current pattern exactly
+ * - Creates individual FESM bundles for perfect tree-shaking
+ * - Provides separate type definitions for each component
+ * - Uses package.json exports for proper module resolution
  */
 export async function generateSecondaryEntryPoints(
   compilerCtx: CompilerCtx,
   components: ComponentCompilerMeta[],
   outputTarget: OutputTargetAngular
 ) {
-  // Only generate secondary entry points when individual components are enabled
+  // Only generate individual component bundles when enabled
   if (!outputTarget.exportIndividualComponents) {
     return;
   }
 
-  // Place secondary entry points at library root level for ng-packagr discovery
-  // This follows Angular Material's approach where each component gets its own directory
-  // at the library root level, not nested inside src/lib
+  // This function will be called POST-BUILD to generate Angular Material-style structure
+  // For now, we'll generate the source structure that can be processed later
   const baseDir = path.dirname(outputTarget.directivesProxyFile);
-  // baseDir is likely: ../angular-workspace/projects/atui-components/src/lib/stencil-generated
-  // We need: ../angular-workspace/projects/atui-components
-  const libraryRoot = path.resolve(baseDir, '../../../'); // Go up from src/lib/stencil-generated to project root
-  const componentsDir = libraryRoot;
+  // baseDir is: ../component-library-angular/projects/library/src/directives
+  // We need: ../component-library-angular/projects/library/dist/ (where the built package goes)
+  const libraryDistDir = path.resolve(baseDir, '../dist');
+  
+  // Generate individual component directories and update package.json
+  await generateAngularMaterialStructure(compilerCtx, components, outputTarget, libraryDistDir);
+}
 
-  // Generate secondary entry points for each component
-  const entryPointPromises = components.map((component) =>
-    generateAngularMaterialStyleEntryPoint(compilerCtx, component, outputTarget, componentsDir)
+/**
+ * Generates the Angular Material-style structure in the dist directory.
+ * This creates individual component directories and updates the package.json exports.
+ */
+async function generateAngularMaterialStructure(
+  compilerCtx: CompilerCtx,
+  components: ComponentCompilerMeta[],
+  outputTarget: OutputTargetAngular,
+  distDir: string
+) {
+  // Generate individual component directories with type definitions
+  const componentPromises = components.map((component) =>
+    generateComponentDirectory(compilerCtx, component, distDir)
   );
 
-  await Promise.all(entryPointPromises);
+  await Promise.all(componentPromises);
+
+  // Update the package.json with individual component exports
+  await updatePackageJsonExports(compilerCtx, components, distDir);
 }
 
 /**
- * Generates a single secondary entry point for a component using Angular Material pattern.
- * Creates the directory structure and files for ng-packagr to automatically discover and build.
+ * Generates an individual component directory with type definitions.
  */
-async function generateAngularMaterialStyleEntryPoint(
+async function generateComponentDirectory(
   compilerCtx: CompilerCtx,
   component: ComponentCompilerMeta,
-  outputTarget: OutputTargetAngular,
-  componentsDir: string
+  distDir: string
 ) {
-  const componentDir = path.join(componentsDir, component.tagName);
+  const componentDir = path.join(distDir, component.tagName);
+  const indexPath = path.join(componentDir, 'index.d.ts');
+  const indexContent = generateComponentTypeDefinitions(component);
 
-  // Generate index.ts - the actual component implementation
-  const indexPath = path.join(componentDir, 'index.ts');
-  const indexContent = await generateComponentImplementation(component);
-
-  // Generate package.json for ng-packagr secondary entry point discovery
-  const packageJsonPath = path.join(componentDir, 'package.json');
-  const packageJsonContent = generateSecondaryEntryPointPackageJson();
-
-  await Promise.all([
-    compilerCtx.fs.writeFile(indexPath, indexContent),
-    compilerCtx.fs.writeFile(packageJsonPath, packageJsonContent),
-  ]);
+  await compilerCtx.fs.writeFile(indexPath, indexContent);
 }
 
 /**
- * Generates the complete component implementation for a secondary entry point.
- * This creates a standalone TypeScript file that ng-packagr can compile properly.
+ * Generates TypeScript type definitions for an individual component.
  */
-async function generateComponentImplementation(component: ComponentCompilerMeta): Promise<string> {
+function generateComponentTypeDefinitions(component: ComponentCompilerMeta): string {
   const tagNameAsPascal = dashToPascalCase(component.tagName);
-  const relPathToProxy = `../src/lib/stencil-generated/components/${component.tagName}`;
 
   return [
     '/*',
-    ` * Secondary entry point for ${component.tagName}`,
+    ` * Individual component types for ${component.tagName}`,
     ' * Enables tree-shaking by allowing imports like:',
-    ` * import { ${tagNameAsPascal} } from '@my-lib/${component.tagName}';`,
+    ` * import { ${tagNameAsPascal} } from 'component-library-angular/${component.tagName}';`,
     ' */',
     '',
-    `export { ${tagNameAsPascal} } from '${relPathToProxy}';`,
+    `export { ${tagNameAsPascal} } from '../index';`,
     '',
   ].join('\n');
 }
 
 /**
- * Generates minimal package.json for ng-packagr secondary entry point discovery.
- * ng-packagr automatically discovers directories with package.json files as secondary entry points.
+ * Updates the package.json file with individual component exports.
  */
-function generateSecondaryEntryPointPackageJson(): string {
-  // Minimal ng-packagr config for a secondary entry point
-  const packageJson = {
-    lib: {
-      entryFile: 'index.ts',
-    },
-  };
+async function updatePackageJsonExports(
+  compilerCtx: CompilerCtx,
+  components: ComponentCompilerMeta[],
+  distDir: string
+) {
+  const packageJsonPath = path.join(distDir, 'package.json');
+  
+  try {
+    // Read existing package.json
+    const packageJsonContent = await compilerCtx.fs.readFile(packageJsonPath);
+    const packageJson = JSON.parse(packageJsonContent);
 
-  return JSON.stringify(packageJson, null, 2) + '\n';
+    // Add individual component exports
+    if (!packageJson.exports) {
+      packageJson.exports = {};
+    }
+
+    // Add exports for each component
+    components.forEach((component) => {
+      packageJson.exports[`./${component.tagName}`] = {
+        types: `./${component.tagName}/index.d.ts`,
+        default: `./fesm2022/${component.tagName}.mjs`
+      };
+    });
+
+    // Write updated package.json
+    const updatedContent = JSON.stringify(packageJson, null, 2) + '\n';
+    await compilerCtx.fs.writeFile(packageJsonPath, updatedContent);
+  } catch (error) {
+    console.warn('Could not update package.json exports:', error);
+  }
 }

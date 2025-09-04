@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:tree-shaking": "ng build library && node scripts/post-build.js",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
     "clean": "rimraf projects/library/dist projects/library/src/directives projects/library/src/*-value-accessor.ts projects/library/src/value-accessor.ts",

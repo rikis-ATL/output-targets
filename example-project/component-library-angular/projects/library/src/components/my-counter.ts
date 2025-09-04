@@ -9,6 +9,8 @@ import type { Components } from 'component-library';
 
 import { defineMyCounter } from './definitions';
 
+
+
 export declare interface MyCounter extends Components.MyCounter {
   /**
    * Emitted when the count changes

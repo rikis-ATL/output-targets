@@ -63,7 +63,7 @@ export const config: Config = {
     angularOutputTarget({
       componentCorePackage: 'component-library',
       outputType: 'standalone', // Enables tree-shaking with individual component exports
-      exportIndividualComponents: true, // Enables single source directory with path aliases
+      exportIndividualComponents: true, // Enables individual component exports
       directivesProxyFile: '../component-library-angular/projects/library/src/directives/proxies.ts',
       valueAccessorConfigs: angularValueAccessorBindings,
     }),

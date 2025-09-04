@@ -10,6 +10,7 @@ import type { Components } from 'component-library';
 import { defineMyRange } from './definitions';
 
 import type { RangeChangeEventDetail as IMyRangeRangeChangeEventDetail } from 'component-library/components';
+import type { StyleEventDetail as IMyRangeStyleEventDetail } from 'component-library/components';
 
 export declare interface MyRange extends Components.MyRange {
   /**

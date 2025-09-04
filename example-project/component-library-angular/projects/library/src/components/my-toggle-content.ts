@@ -9,7 +9,7 @@ import type { Components } from 'component-library';
 
 import { defineMyToggleContent } from './definitions';
 
-export declare interface MyToggleContent extends Components.MyToggleContent {}
+
 
 @ProxyCmp({
   defineCustomElementFn: defineMyToggleContent,

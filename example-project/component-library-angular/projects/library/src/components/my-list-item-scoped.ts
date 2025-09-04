@@ -9,7 +9,7 @@ import type { Components } from 'component-library';
 
 import { defineMyListItemScoped } from './definitions';
 
-export declare interface MyListItemScoped extends Components.MyListItemScoped {}
+
 
 @ProxyCmp({
   defineCustomElementFn: defineMyListItemScoped

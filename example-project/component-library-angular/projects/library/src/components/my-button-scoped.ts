@@ -9,6 +9,8 @@ import type { Components } from 'component-library';
 
 import { defineMyButtonScoped } from './definitions';
 
+
+
 export declare interface MyButtonScoped extends Components.MyButtonScoped {
   /**
    * Emitted when the button has focus.
