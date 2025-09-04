@@ -127,6 +127,8 @@ importers:
         specifier: ~5.8.2
         version: 5.8.3
 
+  example-project/component-library-angular/projects: {}
+
   example-project/component-library-angular/projects/library:
     dependencies:
       '@angular/common':
@@ -142,45 +144,60 @@ importers:
         specifier: ^2.3.0
         version: 2.8.1
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-button: {}
+  example-project/component-library-angular/projects/library/dist:
+    dependencies:
+      '@angular/common':
+        specifier: ^20.0.0
+        version: 20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/core':
+        specifier: ^20.0.0
+        version: 20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1)
+      component-library:
+        specifier: workspace:*
+        version: link:../../../../component-library
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-button-scoped: {}
+  example-project/component-library-angular/projects/my-button: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-checkbox: {}
+  example-project/component-library-angular/projects/my-button-scoped: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-complex-props: {}
+  example-project/component-library-angular/projects/my-checkbox: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-complex-props-scoped: {}
+  example-project/component-library-angular/projects/my-complex-props: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-component: {}
+  example-project/component-library-angular/projects/my-complex-props-scoped: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-component-scoped: {}
+  example-project/component-library-angular/projects/my-component: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-counter: {}
+  example-project/component-library-angular/projects/my-component-scoped: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-input: {}
+  example-project/component-library-angular/projects/my-counter: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-input-scoped: {}
+  example-project/component-library-angular/projects/my-input: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-list: {}
+  example-project/component-library-angular/projects/my-input-scoped: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-list-item: {}
+  example-project/component-library-angular/projects/my-list: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-list-item-scoped: {}
+  example-project/component-library-angular/projects/my-list-item: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-list-scoped: {}
+  example-project/component-library-angular/projects/my-list-item-scoped: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-popover: {}
+  example-project/component-library-angular/projects/my-list-scoped: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-radio: {}
+  example-project/component-library-angular/projects/my-popover: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-radio-group: {}
+  example-project/component-library-angular/projects/my-radio: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-range: {}
+  example-project/component-library-angular/projects/my-radio-group: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-toggle: {}
+  example-project/component-library-angular/projects/my-range: {}
 
-  example-project/component-library-angular/projects/library/src/stencil-generated/components/my-toggle-content: {}
+  example-project/component-library-angular/projects/my-toggle: {}
+
+  example-project/component-library-angular/projects/my-toggle-content: {}
 
   example-project/component-library-react:
     dependencies:
@@ -502,6 +519,52 @@ importers:
         version: 9.15.0(puppeteer-core@24.10.1)
 
   example-project/ng-app:
+    dependencies:
+      '@angular/common':
+        specifier: ^20.0.0
+        version: 20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^20.0.0
+        version: 20.0.3
+      '@angular/core':
+        specifier: ^20.0.0
+        version: 20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/forms':
+        specifier: ^20.0.0
+        version: 20.0.3(@angular/common@20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.0.3(@angular/animations@20.0.3(@angular/common@20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^20.0.0
+        version: 20.0.3(@angular/animations@20.0.3(@angular/common@20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))
+      '@angular/router':
+        specifier: ^20.0.0
+        version: 20.0.3(@angular/common@20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.0.3(@angular/animations@20.0.3(@angular/common@20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+      component-library-angular:
+        specifier: workspace:../component-library-angular/projects/library/dist
+        version: link:../component-library-angular/projects/library/dist
+      rxjs:
+        specifier: ~7.8.0
+        version: 7.8.2
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
+      zone.js:
+        specifier: ~0.15.0
+        version: 0.15.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^20.0.2
+        version: 20.0.2(080eb11d1c38540c2d8467faa49d7a46)
+      '@angular/cli':
+        specifier: ^20.0.2
+        version: 20.0.2(@types/node@22.15.31)(chokidar@4.0.3)
+      '@angular/compiler-cli':
+        specifier: ^20.0.0
+        version: 20.0.3(@angular/compiler@20.0.3)(typescript@5.8.3)
+      typescript:
+        specifier: ~5.8.2
+        version: 5.8.3
+
+  example-project/ng-app-tree-shaking:
     dependencies:
       '@angular/common':
         specifier: ^20.0.0
