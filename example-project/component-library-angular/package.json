@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build library && node scripts/post-build.js",
     "build:tree-shaking": "ng build library && node scripts/post-build.js",
     "watch": "ng build --watch --configuration development",
     "test": "jest",

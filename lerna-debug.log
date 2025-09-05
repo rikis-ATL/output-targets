@@ -1,0 +1,22 @@
+0 silly argv {
+0 silly argv   _: [ 'run' ],
+0 silly argv   lernaVersion: '8.2.2',
+0 silly argv   '$0': 'node_modules/lerna/dist/cli.js',
+0 silly argv   script: 'clean'
+0 silly argv }
+1 notice cli v8.2.2
+2 verbose packageConfigs Package manager "pnpm" detected. Resolving packages using `pnpm-workspace.yaml`.
+3 verbose rootPath /home/rikis/dev/output-targets
+4 error MultipleProjectsWithSameNameError: The following projects are defined in multiple locations:
+4 error   - components:
+4 error     - example-project/component-library-angular/projects/components
+4 error     - example-project/component-library-angular/projects/library/components
+4 error
+4 error   To fix this, set a unique name for each project in a project.json inside the project's root. If the project does not currently have a project.json, you can create one that contains only a name.
+4 error       at validateAndNormalizeProjectRootMap (/home/rikis/dev/output-targets/node_modules/.pnpm/nx@20.8.2/node_modules/nx/src/project-graph/utils/project-configuration-utils.js:467:15)
+4 error       at mergeCreateNodesResults (/home/rikis/dev/output-targets/node_modules/.pnpm/nx@20.8.2/node_modules/nx/src/project-graph/utils/project-configuration-utils.js:353:9)
+4 error       at /home/rikis/dev/output-targets/node_modules/.pnpm/nx@20.8.2/node_modules/nx/src/project-graph/utils/project-configuration-utils.js:297:85
+4 error       at async buildProjectGraphAndSourceMapsWithoutDaemon (/home/rikis/dev/output-targets/node_modules/.pnpm/nx@20.8.2/node_modules/nx/src/project-graph/project-graph.js:87:31)
+4 error       at async createProjectGraphAndSourceMapsAsync (/home/rikis/dev/output-targets/node_modules/.pnpm/nx@20.8.2/node_modules/nx/src/project-graph/project-graph.js:271:25)
+4 error       at async createProjectGraphAsync (/home/rikis/dev/output-targets/node_modules/.pnpm/nx@20.8.2/node_modules/nx/src/project-graph/project-graph.js:219:39)
+4 error       at async detectProjects (/home/rikis/dev/output-targets/node_modules/.pnpm/lerna@8.2.2_encoding@0.1.13/node_modules/lerna/dist/index.js:3003:25)

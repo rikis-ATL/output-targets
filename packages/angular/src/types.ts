@@ -43,7 +43,7 @@ export interface OutputTargetAngular {
    *
    * @default false
    */
-  exportIndividualComponents?: boolean;
+  // exportIndividualComponents removed - now handled by post-build script
   /**
    * Experimental (!)
    * When true, tries to inline the properties of components. This is required to enable Angular Language Service

@@ -52,17 +52,6 @@ export class MyButton {
 
 
 
-export declare interface MyButton extends Components.MyButton {
-  /**
-   * Emitted when the button has focus.
-   */
-  myFocus: EventEmitter<CustomEvent<void>>;
-  /**
-   * Emitted when the button loses focus.
-   */
-  myBlur: EventEmitter<CustomEvent<void>>;
-}
-
 
 @ProxyCmp({
   defineCustomElementFn: defineMyButtonScoped,
@@ -89,17 +78,6 @@ export class MyButtonScoped {
 
 
 
-
-export declare interface MyButtonScoped extends Components.MyButtonScoped {
-  /**
-   * Emitted when the button has focus.
-   */
-  myFocus: EventEmitter<CustomEvent<void>>;
-  /**
-   * Emitted when the button loses focus.
-   */
-  myBlur: EventEmitter<CustomEvent<void>>;
-}
 
 
 @ProxyCmp({
@@ -283,13 +261,6 @@ export class MyCounter {
 
 
 
-
-export declare interface MyCounter extends Components.MyCounter {
-  /**
-   * Emitted when the count changes
-   */
-  count: EventEmitter<CustomEvent<number>>;
-}
 
 
 @ProxyCmp({
@@ -556,17 +527,6 @@ export class MyRadio {
 
 
 
-
-export declare interface MyRadio extends Components.MyRadio {
-  /**
-   * Emitted when the radio button has focus.
-   */
-  ionFocus: EventEmitter<CustomEvent<void>>;
-  /**
-   * Emitted when the radio button loses focus.
-   */
-  ionBlur: EventEmitter<CustomEvent<void>>;
-}
 
 
 @ProxyCmp({
