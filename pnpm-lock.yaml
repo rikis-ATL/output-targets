@@ -86,7 +86,7 @@ importers:
     devDependencies:
       '@angular/build':
         specifier: ^20.0.2
-        version: 20.0.2(080eb11d1c38540c2d8467faa49d7a46)
+        version: 20.0.2(edf2cf0bfa72d016d05ab4537b0a9808)
       '@angular/cli':
         specifier: ^20.0.2
         version: 20.0.2(@types/node@22.15.31)(chokidar@4.0.3)
@@ -138,6 +138,21 @@ importers:
       component-library:
         specifier: workspace:*
         version: link:../../../component-library
+      tslib:
+        specifier: ^2.3.0
+        version: 2.8.1
+
+  example-project/component-library-angular/projects/library/dist:
+    dependencies:
+      '@angular/common':
+        specifier: ^20.0.0
+        version: 20.0.3(@angular/core@20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/core':
+        specifier: ^20.0.0
+        version: 20.0.3(@angular/compiler@20.0.3)(rxjs@7.8.2)(zone.js@0.15.1)
+      component-library:
+        specifier: workspace:*
+        version: link:../../../../component-library
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
@@ -212,6 +227,8 @@ importers:
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.15.31)(jsdom@20.0.3)(less@4.3.0)(sass@1.89.2)(terser@5.42.0)
+
+  example-project/component-library/hydrate: {}
 
   example-project/next-15-react-19-app:
     dependencies:
@@ -543,7 +560,7 @@ importers:
     devDependencies:
       '@angular/build':
         specifier: ^20.0.2
-        version: 20.0.2(edf2cf0bfa72d016d05ab4537b0a9808)
+        version: 20.0.2(080eb11d1c38540c2d8467faa49d7a46)
       '@angular/cli':
         specifier: ^20.0.2
         version: 20.0.2(@types/node@22.15.31)(chokidar@4.0.3)
