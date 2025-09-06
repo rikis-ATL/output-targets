@@ -7,11 +7,30 @@
   },
   "files": [
     "dist",
-    "package.json"
+    "package.json",
+    "src"
   ],
   "dependencies": {
     "component-library": "workspace:*",
     "tslib": "^2.3.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/fesm2022/component-library-angular.mjs"
+    },
+    "./src/directives/my-button": {
+      "types": "./src/directives/my-button.ts",
+      "default": "./dist/fesm2022/component-library-angular.mjs"
+    },
+    "./src/directives/my-checkbox": {
+      "types": "./src/directives/my-checkbox.ts", 
+      "default": "./dist/fesm2022/component-library-angular.mjs"
+    },
+    "./src/directives/*": {
+      "types": "./src/directives/*.ts",
+      "default": "./dist/fesm2022/component-library-angular.mjs"
+    }
+  }
 }
