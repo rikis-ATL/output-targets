@@ -11,7 +11,7 @@ import { MyButton, MyCheckbox, MyInput } from 'component-library-angular';
     <div class="header">
       <h1>📦 Old Import Pattern (No Tree Shaking)</h1>
       <p>This app uses the traditional import pattern from the main package</p>
-      <code>import {{ MyButton, MyCheckbox, MyInput }} from 'component-library-angular';</code>
+      <code>import {{'{ MyButton, MyCheckbox, MyInput }'}} from 'component-library-angular';</code>
     </div>
     
     <div class="container">
