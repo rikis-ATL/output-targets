@@ -6,4 +6,8 @@ export const routes: Routes = [
     path: '',
     component: ComponentTests,
   },
+  {
+    path: 'component-tests',
+    component: ComponentTests,
+  },
 ];

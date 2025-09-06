@@ -1,11 +1,11 @@
 {
-  "name": "ng-app",
+  "name": "ng-app-individual",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "build:stats": "ng build --stats-json",
-    "bundle-report": "npm run build:stats && npx webpack-bundle-analyzer dist/ng-app/stats.json",
+    "bundle-report": "npm run build:stats && npx webpack-bundle-analyzer dist/ng-app-individual/stats.json",
     "watch": "ng build --watch --configuration development"
   },
   "private": true,
