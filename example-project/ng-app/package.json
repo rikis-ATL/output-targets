@@ -4,6 +4,13 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:stats": "ng build --stats-json",
+    "bundle-report": "npm run build:stats && npx webpack-bundle-analyzer dist/ng-app/stats.json",
+    "build:individual": "ng build --configuration=individual",
+    "build:bulk": "ng build --configuration=bulk",
+    "compare-bundles": "npm run build:individual && npm run build:bulk && npm run analyze-bundles",
+    "analyze-bundles": "node analyze-bundles.js",
+    "test-tree-shaking": "npm run compare-bundles",
     "watch": "ng build --watch --configuration development"
   },
   "private": true,
@@ -26,6 +33,7 @@
     "@angular/build": "^20.0.2",
     "@angular/cli": "^20.0.2",
     "@angular/compiler-cli": "^20.0.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "typescript": "~5.8.2"
   }
 }

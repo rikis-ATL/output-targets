@@ -76,6 +76,34 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "individual": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                }
+              ],
+              "outputHashing": "all",
+              "outputPath": "dist/ng-app-individual",
+              "statsJson": true,
+              "optimization": true,
+              "browser": "src/main-individual.ts"
+            },
+            "bulk": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kB",
+                  "maximumError": "1MB"
+                }
+              ],
+              "outputHashing": "all",
+              "outputPath": "dist/ng-app-bulk", 
+              "statsJson": true,
+              "optimization": true,
+              "browser": "src/main-bulk.ts"
             }
           },
           "defaultConfiguration": "production"
