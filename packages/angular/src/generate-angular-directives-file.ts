@@ -12,14 +12,35 @@ export function generateAngularDirectivesFile(
     return Promise.resolve();
   }
 
-  const proxyPath = relativeImport(outputTarget.directivesArrayFile, outputTarget.directivesProxyFile, '.ts');
-  const directives = components
-    .map((cmpMeta) => dashToPascalCase(cmpMeta.tagName))
-    .map((className) => `d.${className}`)
-    .join(',\n  ');
+  let directives: string;
+  let imports: string;
+
+  if (outputTarget.generateIndividualComponents) {
+    // When using individual components, import each component from its own file
+    const componentImports = components
+      .map((cmpMeta) => {
+        const className = dashToPascalCase(cmpMeta.tagName);
+        const componentFile = relativeImport(outputTarget.directivesArrayFile!, `${outputTarget.directivesProxyFile}/../${cmpMeta.tagName}.ts`, '.ts');
+        return `import { ${className} } from '${componentFile}';`;
+      })
+      .join('\n');
+    
+    imports = componentImports;
+    directives = components
+      .map((cmpMeta) => dashToPascalCase(cmpMeta.tagName))
+      .join(',\n  ');
+  } else {
+    // Original behavior: import all components from the proxy file
+    const proxyPath = relativeImport(outputTarget.directivesArrayFile, outputTarget.directivesProxyFile, '.ts');
+    imports = `import * as d from '${proxyPath}';`;
+    directives = components
+      .map((cmpMeta) => dashToPascalCase(cmpMeta.tagName))
+      .map((className) => `d.${className}`)
+      .join(',\n  ');
+  }
 
   const c = `
-import * as d from '${proxyPath}';
+${imports}
 
 export const DIRECTIVES = [
   ${directives}

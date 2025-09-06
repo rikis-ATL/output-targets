@@ -34,6 +34,13 @@ export interface OutputTargetAngular {
    * to type-check and show jsdocs when using the components in html-templates.
    */
   inlineProperties?: boolean;
+  /**
+   * When true, generates individual component files that enable tree shaking.
+   * Each component gets its own file and a components.ts file exports all components.
+   * This allows bundlers to only include components that are actually imported.
+   * When false (default), generates a single monolithic proxy file.
+   */
+  generateIndividualComponents?: boolean;
 }
 
 export type ValueAccessorTypes = 'text' | 'radio' | 'select' | 'number' | 'boolean';
