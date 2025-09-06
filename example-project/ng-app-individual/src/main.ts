@@ -1,63 +1,51 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { Component } from '@angular/core';
-// NEW PATTERN: Import from individual component files for tree shaking
+// NEW PATTERN: Import from the main package, but only specific components for tree shaking
 // This enables bundlers to only include the components that are actually used
-import { MyButton } from 'component-library-angular/src/directives/my-button';
-import { MyCheckbox } from 'component-library-angular/src/directives/my-checkbox'; 
-import { MyInput } from 'component-library-angular/src/directives/my-input';
+// TESTING: Only importing MyButton to verify tree shaking excludes other components
+import { MyButton } from 'component-library-angular';
 
 @Component({
   selector: 'app-root',
-  imports: [MyButton, MyCheckbox, MyInput],
+  imports: [MyButton],
   template: `
     <div class="header">
-      <h1>🌳 Individual Import Pattern (Tree Shaking)</h1>
-      <p>This app uses individual component imports for optimal tree shaking</p>
+      <h1>🌳 Single Component Test (Tree Shaking Verification)</h1>
+      <p>This app imports ONLY MyButton to verify tree shaking excludes other components</p>
       <div class="import-examples">
-        <code>import {{ MyButton }} from 'component-library-angular/src/directives/my-button';</code>
-        <code>import {{ MyCheckbox }} from 'component-library-angular/src/directives/my-checkbox';</code>
-        <code>import {{ MyInput }} from 'component-library-angular/src/directives/my-input';</code>
+        <code>import MyButton from 'component-library-angular';</code>
+        <div class="excluded">
+          <strong>NOT imported:</strong>
+          <span>MyCheckbox, MyInput, and other components should be excluded from bundle</span>
+        </div>
       </div>
     </div>
     
     <div class="container">
       <div class="success">
-        <strong>✅ Tree Shaking Enabled:</strong> 
-        Each component is imported from its own file, allowing bundlers to 
-        include only the components that are actually used in the application.
+        <strong>✅ Single Component Test:</strong> 
+        Only MyButton is imported. Build analysis should show that MyCheckbox, MyInput, 
+        and all other components are completely excluded from the bundle.
       </div>
       
       <div class="component-showcase">
         <my-button (click)="buttonClicked()">
-          Tree-Shaken Button ({{ clickCount }})
+          Single Component Button
         </my-button>
-        
-        <my-checkbox 
-          [checked]="checkboxValue" 
-          (ionChange)="checkboxChanged($event)">
-          Tree-Shaken Checkbox
-        </my-checkbox>
-        
-        <my-input 
-          placeholder="Tree-shaken input"
-          [value]="inputValue"
-          (myChange)="inputChanged($event)">
-        </my-input>
       </div>
       
       <div class="status">
-        <p>Button clicks: {{ clickCount }}</p>
-        <p>Checkbox: {{ checkboxValue ? 'Checked' : 'Unchecked' }}</p>
-        <p>Input value: {{ inputValue }}</p>
+        <p>Button has been clicked <span [textContent]="clickCount"></span> times</p>
       </div>
       
-      <div class="benefits">
-        <h3>Tree Shaking Benefits:</h3>
+      <div class="verification">
+        <h3>Bundle Verification Instructions:</h3>
         <ul>
-          <li>Only used components are included in the bundle</li>
-          <li>Smaller bundle sizes for better performance</li>
-          <li>Faster loading times</li>
-          <li>Reduced memory usage</li>
+          <li>Build this app and run npm run build</li>
+          <li>Inspect dist folder contents</li>
+          <li>Search bundle for MyCheckbox or MyInput - should find ZERO matches</li>
+          <li>Only MyButton-related code should be present</li>
+          <li>Run npm run analyze to view bundle composition</li>
         </ul>
       </div>
     </div>
@@ -91,6 +79,17 @@ import { MyInput } from 'component-library-angular/src/directives/my-input';
       font-family: monospace;
       font-size: 0.9em;
       border: 1px solid #dee2e6;
+    }
+    .excluded {
+      margin-top: 10px;
+      padding: 8px;
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+    .excluded strong {
+      color: #856404;
     }
     
     .container {
@@ -128,7 +127,7 @@ import { MyInput } from 'component-library-angular/src/directives/my-input';
       color: #155724;
     }
     
-    .benefits {
+    .verification {
       margin-top: 20px;
       padding: 15px;
       background: #f8f9fa;
@@ -136,31 +135,29 @@ import { MyInput } from 'component-library-angular/src/directives/my-input';
       border: 1px solid #dee2e6;
     }
     
-    .benefits h3 {
+    .verification h3 {
       margin-top: 0;
       color: #495057;
     }
     
-    .benefits ul {
+    .verification ul {
       margin-bottom: 0;
+    }
+    
+    .verification code {
+      background: #e9ecef;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 0.9em;
     }
   `],
 })
 class IndividualImportApp {
   clickCount = 0;
-  checkboxValue = false;
-  inputValue = '';
 
   buttonClicked() {
     this.clickCount++;
-  }
-
-  checkboxChanged(event: any) {
-    this.checkboxValue = event.detail.checked;
-  }
-
-  inputChanged(event: any) {
-    this.inputValue = event.detail.value;
   }
 }
 
