@@ -65,7 +65,8 @@ export const config: Config = {
       directivesProxyFile: '../component-library-angular/projects/library/src/directives/proxies.ts',
       directivesArrayFile: '../component-library-angular/projects/library/src/directives/index.ts',
       valueAccessorConfigs: angularValueAccessorBindings,
-      generateIndividualComponents: true
+      generateIndividualComponents: true,
+      componentOutputDir: '../components' // Individual components will be generated in src/components
     }),
     reactOutputTarget({
       outDir: '../component-library-react/src',

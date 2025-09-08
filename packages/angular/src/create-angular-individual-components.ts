@@ -30,12 +30,15 @@ export async function createAngularIndividualComponents(
   const isStandaloneBuild = outputType === OutputTypes.Standalone;
   const includeOutputImports = components.some((component) => component.events.some((event) => !event.internal));
 
+  // Determine the output directory for individual component files
+  const componentOutputPath = outputTarget.componentOutputDir || path.dirname(outputTarget.directivesProxyFile);
+
   // Create individual component files
   const componentFiles: string[] = [];
   
   for (const cmpMeta of components) {
     const componentFileName = `${cmpMeta.tagName}.ts`;
-    const componentFilePath = path.join(path.dirname(outputTarget.directivesProxyFile), componentFileName);
+    const componentFilePath = path.join(componentOutputPath, componentFileName);
     
     componentFiles.push(componentFileName);
     
@@ -48,7 +51,8 @@ export async function createAngularIndividualComponents(
       includeSingleComponentAngularModules,
       isCustomElementsBuild,
       isStandaloneBuild,
-      includeOutputImports
+      includeOutputImports,
+      componentOutputPath
     );
     
     await compilerCtx.fs.writeFile(componentFilePath, componentFileContent);
@@ -56,7 +60,7 @@ export async function createAngularIndividualComponents(
   
   // Create components index file that exports all individual components
   const componentsIndexContent = generateComponentsIndexFile(components, componentFiles);
-  const componentsIndexPath = path.join(path.dirname(outputTarget.directivesProxyFile), 'components.ts');
+  const componentsIndexPath = path.join(componentOutputPath, 'components.ts');
   await compilerCtx.fs.writeFile(componentsIndexPath, componentsIndexContent);
   
   return componentFiles;
@@ -71,7 +75,8 @@ function generateIndividualComponentFile(
   includeSingleComponentAngularModules: boolean,
   isCustomElementsBuild: boolean,
   isStandaloneBuild: boolean,
-  includeOutputImports: boolean
+  includeOutputImports: boolean,
+  componentOutputPath: string
 ): string {
   const tagNameAsPascal = dashToPascalCase(cmpMeta.tagName);
   
@@ -95,11 +100,16 @@ function generateIndividualComponentFile(
     angularCoreImports.push('NgModule');
   }
 
+  // Calculate the relative path to angular-component-lib from the component output directory
+  const proxiesDir = path.dirname(outputTarget.directivesProxyFile);
+  const relativePath = path.relative(componentOutputPath, proxiesDir);
+  const angularComponentLibPath = relativePath ? `${relativePath}/angular-component-lib/utils` : './angular-component-lib/utils';
+
   const imports = `/* tslint:disable */
 /* auto-generated angular directive proxy */
 ${createImportStatement(angularCoreImports, '@angular/core')}
 
-${createImportStatement(componentLibImports, './angular-component-lib/utils')}\n`;
+${createImportStatement(componentLibImports, normalizePath(angularComponentLibPath))}\n`;
 
   /**
    * Generate JSX import type from correct location.

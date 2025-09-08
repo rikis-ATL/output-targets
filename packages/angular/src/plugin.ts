@@ -48,6 +48,17 @@ export function normalizeOutputTarget(config: Config, outputTarget: OutputTarget
     results.directivesArrayFile = normalizePath(path.join(config.rootDir, outputTarget.directivesArrayFile));
   }
 
+  // Handle componentOutputDir - normalize the path
+  if (outputTarget.componentOutputDir) {
+    if (path.isAbsolute(outputTarget.componentOutputDir)) {
+      results.componentOutputDir = normalizePath(outputTarget.componentOutputDir);
+    } else {
+      // Relative to directivesProxyFile directory
+      const baseDir = path.dirname(results.directivesProxyFile);
+      results.componentOutputDir = normalizePath(path.join(baseDir, outputTarget.componentOutputDir));
+    }
+  }
+
   if ((outputTarget as any).includeSingleComponentAngularModules !== undefined) {
     throw new Error(
       "The 'includeSingleComponentAngularModules' option has been removed. Please use 'outputType' instead."

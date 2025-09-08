@@ -39,8 +39,17 @@ export interface OutputTargetAngular {
    * Each component gets its own file and a components.ts file exports all components.
    * This allows bundlers to only include components that are actually imported.
    * When false (default), generates a single monolithic proxy file.
+   * 
+   * Note: When this is true and outputType is not explicitly set, outputType defaults to 'standalone'.
+   * Individual components are generated as standalone Angular components by default.
    */
   generateIndividualComponents?: boolean;
+  /**
+   * The directory where individual component files should be generated when generateIndividualComponents is true.
+   * This can be an absolute path or a path relative to the directivesProxyFile directory.
+   * Defaults to the same directory as directivesProxyFile when not specified.
+   */
+  componentOutputDir?: string;
 }
 
 export type ValueAccessorTypes = 'text' | 'radio' | 'select' | 'number' | 'boolean';

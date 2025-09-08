@@ -57,7 +57,8 @@ export const config: Config = {
 | `outputType`           | Specifies the type of output to be generated. It can take one of the following values: <br />1. `component`: Generates all the component wrappers to be declared on an Angular module. This option is required for Stencil projects using the `dist` hydrated output.<br /> 2. `scam`: Generates a separate Angular module for each component.<br /> 3. `standalone`: Generates standalone component wrappers.<br /> Both `scam` and `standalone` options are compatible with the `dist-custom-elements` output. <br />Note: Please choose the appropriate `outputType` based on your project's requirements and the desired output structure. Defaults to `component`. |
 | `customElementsDir`    | This is the directory where the custom elements are imported from when using the [Custom Elements Bundle](https://stenciljs.com/docs/custom-elements). Defaults to the `components` directory. Only applies for `outputType: "scam"` or `outputType: "standalone"`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `inlineProperties` | Experimental. When true, tries to inline the properties of components. This is required to enable Angular Language Service to type-check and show jsdocs when using the components in html-templates.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `generateIndividualComponents` | When `true`, generates individual component files that enable tree shaking. Each component gets its own file and a `components.ts` file exports all components. This allows bundlers to only include components that are actually imported. When `false` (default), generates a single monolithic proxy file. Defaults to `false` for backward compatibility. |
+| `generateIndividualComponents` | When `true`, generates individual component files that enable tree shaking. Each component gets its own file and a `components.ts` file exports all components. This allows bundlers to only include components that are actually imported. When `false` (default), generates a single monolithic proxy file. Note: When this is `true` and `outputType` is not explicitly set, `outputType` defaults to `'standalone'`. Individual components are generated as standalone Angular components by default. |
+| `componentOutputDir` | The directory where individual component files should be generated when `generateIndividualComponents` is `true`. This can be an absolute path or a path relative to the `directivesProxyFile` directory. Defaults to the same directory as `directivesProxyFile` when not specified. |
 
 ## Tree Shaking Support
 
@@ -73,6 +74,7 @@ angularOutputTarget({
   directivesProxyFile: '../angular-workspace/projects/component-library/src/directives/proxies.ts',
   directivesArrayFile: '../angular-workspace/projects/component-library/src/directives/index.ts',
   generateIndividualComponents: true, // Enable tree shaking
+  componentOutputDir: '../components', // Optional: customize output directory
 })
 ```
 
@@ -81,14 +83,23 @@ angularOutputTarget({
 When tree shaking is enabled, the output target generates the following structure:
 
 ```
-directives/
-├── my-button.ts           # Individual component file
-├── my-checkbox.ts         # Individual component file  
-├── my-input.ts            # Individual component file
-├── components.ts          # Exports all components from individual files
-├── proxies.ts            # Re-exports from individual components (backward compatibility)
-└── index.ts              # DIRECTIVES array with individual imports
+src/
+├── directives/
+│   ├── proxies.ts             # Re-exports from components directory (backward compatibility)
+│   ├── index.ts               # DIRECTIVES array with individual imports
+│   └── angular-component-lib/ # Angular utilities
+└── components/                # Individual component files (configurable via componentOutputDir)
+    ├── my-button.ts           # Individual component file
+    ├── my-checkbox.ts         # Individual component file  
+    ├── my-input.ts            # Individual component file
+    └── components.ts          # Exports all components from individual files
 ```
+
+**Key Benefits:**
+- Individual component files are generated in a separate directory (`components/` by default)
+- The `proxies.ts` file re-exports from individual components for backward compatibility
+- The path can be customized using the `componentOutputDir` option
+- Components are standalone by default when using individual component generation
 
 ## Import Patterns and Use Cases
 
