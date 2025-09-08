@@ -101,9 +101,15 @@ function generateIndividualComponentFile(
   }
 
   // Calculate the relative path to angular-component-lib from the component output directory
-  const proxiesDir = path.dirname(outputTarget.directivesProxyFile);
-  const relativePath = path.relative(componentOutputPath, proxiesDir);
-  const angularComponentLibPath = relativePath ? `${relativePath}/angular-component-lib/utils` : './angular-component-lib/utils';
+  // When generateIndividualComponents is true and componentOutputDir is specified,
+  // angular-component-lib is copied to the component output directory
+  const angularComponentLibPath = outputTarget.generateIndividualComponents && outputTarget.componentOutputDir
+    ? './angular-component-lib/utils'  // utils is in the same directory as the components
+    : (() => {
+        const proxiesDir = path.dirname(outputTarget.directivesProxyFile);
+        const relativePath = path.relative(componentOutputPath, proxiesDir);
+        return relativePath ? `${relativePath}/angular-component-lib/utils` : './angular-component-lib/utils';
+      })();
 
   const imports = `/* tslint:disable */
 /* auto-generated angular directive proxy */

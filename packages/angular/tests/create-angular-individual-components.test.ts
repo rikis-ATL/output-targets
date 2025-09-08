@@ -164,6 +164,8 @@ describe('createAngularIndividualComponents', () => {
     const componentContent = componentFileCall[1];
     
     // Verify the import path is correctly calculated for the angular-component-lib
-    expect(componentContent).toContain("import { ProxyCmp } from '../directives/angular-component-lib/utils';");
+    // When generateIndividualComponents is true and componentOutputDir is specified,
+    // angular-component-lib should be copied to the component output directory
+    expect(componentContent).toContain("import { ProxyCmp } from './angular-component-lib/utils';");
   });
 });

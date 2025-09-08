@@ -88,7 +88,14 @@ async function copyResources(config: Config, outputTarget: OutputTargetAngular) 
     throw new Error('stencil is not properly initialized at this step. Notify the developer');
   }
   const srcDirectory = path.join(__dirname, '..', 'angular-component-lib');
-  const destDirectory = path.join(path.dirname(outputTarget.directivesProxyFile), 'angular-component-lib');
+  
+  // Copy angular-component-lib to the component output directory when generateIndividualComponents is true
+  // and componentOutputDir is specified, otherwise copy to the directives directory
+  const targetDirectory = outputTarget.generateIndividualComponents && outputTarget.componentOutputDir
+    ? outputTarget.componentOutputDir
+    : path.dirname(outputTarget.directivesProxyFile);
+    
+  const destDirectory = path.join(targetDirectory, 'angular-component-lib');
 
   return config.sys.copy(
     [
