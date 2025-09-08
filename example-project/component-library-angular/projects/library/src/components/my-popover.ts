@@ -20,6 +20,7 @@ import { defineCustomElement as defineMyPopover } from 'component-library/compon
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['animated', 'backdropDismiss', { name: 'component', required: true }, 'componentProps', 'cssClass', 'event', 'keyboardClose', 'mode', 'showBackdrop', 'translucent'],
   outputs: ['myPopoverDidPresent', 'myPopoverWillPresent', 'myPopoverWillDismiss', 'myPopoverDidDismiss'],
+  standalone: true
 })
 export class MyPopover {
   protected el: HTMLMyPopoverElement;

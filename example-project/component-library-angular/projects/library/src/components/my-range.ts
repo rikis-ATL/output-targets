@@ -19,6 +19,7 @@ import { defineCustomElement as defineMyRange } from 'component-library/componen
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['color', 'debounce', 'disabled', 'dualKnobs', 'max', 'min', 'mode', 'name', 'pin', 'snaps', 'step', 'ticks', 'value'],
   outputs: ['myChange', 'myFocus', 'myBlur'],
+  standalone: true
 })
 export class MyRange {
   protected el: HTMLMyRangeElement;

@@ -20,6 +20,7 @@ import { defineCustomElement as defineMyInputScoped } from 'component-library/co
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['accept', 'autocapitalize', 'autocomplete', 'autocorrect', 'autofocus', 'clearInput', 'clearOnEdit', 'color', 'disabled', 'enterkeyhint', 'inputmode', 'max', 'maxlength', 'min', 'minlength', 'mode', 'multiple', 'name', 'pattern', 'placeholder', 'readonly', 'required', 'size', 'spellcheck', 'step', 'type', 'value'],
   outputs: ['myInput', 'myChange', 'myBlur', 'myFocus'],
+  standalone: true
 })
 export class MyInputScoped {
   protected el: HTMLMyInputScopedElement;

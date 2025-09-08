@@ -17,6 +17,7 @@ import { defineCustomElement as defineMyToggle } from 'component-library/compone
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+  standalone: true
 })
 export class MyToggle {
   protected el: HTMLMyToggleElement;

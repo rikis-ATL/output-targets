@@ -19,6 +19,7 @@ import { defineCustomElement as defineMyRadioGroup } from 'component-library/com
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['allowEmptySelection', 'compareWith', 'name', 'value'],
   outputs: ['myChange'],
+  standalone: true
 })
 export class MyRadioGroup {
   protected el: HTMLMyRadioGroupElement;

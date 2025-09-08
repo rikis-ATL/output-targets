@@ -17,6 +17,7 @@ import { defineCustomElement as defineMyListItem } from 'component-library/compo
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+  standalone: true
 })
 export class MyListItem {
   protected el: HTMLMyListItemElement;

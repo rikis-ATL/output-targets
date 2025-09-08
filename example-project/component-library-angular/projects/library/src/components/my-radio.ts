@@ -19,6 +19,7 @@ import { defineCustomElement as defineMyRadio } from 'component-library/componen
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['alignment', 'color', 'disabled', 'justify', 'labelPlacement', 'mode', 'name', 'value'],
   outputs: ['ionFocus', 'ionBlur'],
+  standalone: true
 })
 export class MyRadio {
   protected el: HTMLMyRadioElement;

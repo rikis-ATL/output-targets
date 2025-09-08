@@ -19,6 +19,7 @@ import { defineCustomElement as defineMyComponentScoped } from 'component-librar
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['first', 'last', 'middleName'],
   outputs: ['myCustomEvent'],
+  standalone: true
 })
 export class MyComponentScoped {
   protected el: HTMLMyComponentScopedElement;

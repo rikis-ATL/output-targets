@@ -18,6 +18,7 @@ import { defineCustomElement as defineMyComplexPropsScoped } from 'component-lib
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['baz', 'foo', 'grault', 'quux', 'waldo'],
+  standalone: true
 })
 export class MyComplexPropsScoped {
   protected el: HTMLMyComplexPropsScopedElement;

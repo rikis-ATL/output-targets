@@ -19,6 +19,7 @@ import { defineCustomElement as defineMyButtonScoped } from 'component-library/c
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['buttonType', 'color', 'disabled', 'download', 'expand', 'fill', 'href', 'mode', 'rel', 'shape', 'size', 'strong', 'target', 'type'],
   outputs: ['myFocus', 'myBlur'],
+  standalone: true
 })
 export class MyButtonScoped {
   protected el: HTMLMyButtonScopedElement;

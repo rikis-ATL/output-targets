@@ -18,6 +18,7 @@ import { defineCustomElement as defineMyToggleContent } from 'component-library/
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['visible'],
+  standalone: true
 })
 export class MyToggleContent {
   protected el: HTMLMyToggleContentElement;

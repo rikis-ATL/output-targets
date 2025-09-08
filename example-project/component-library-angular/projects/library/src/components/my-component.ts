@@ -18,6 +18,7 @@ import { defineCustomElement as defineMyComponent } from 'component-library/comp
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['first', 'last', 'middleName'],
+  standalone: true
 })
 export class MyComponent {
   protected el: HTMLMyComponentElement;

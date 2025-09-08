@@ -19,6 +19,7 @@ import { defineCustomElement as defineMyCheckbox } from 'component-library/compo
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['alignment', 'checked', 'color', 'disabled', 'indeterminate', 'justify', 'labelPlacement', 'mode', 'name', 'value'],
   outputs: ['ionChange', 'ionChangeNested', 'ionFocus', 'ionBlur'],
+  standalone: true
 })
 export class MyCheckbox {
   protected el: HTMLMyCheckboxElement;

@@ -19,6 +19,7 @@ import { defineCustomElement as defineMyCounter } from 'component-library/compon
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['startValue'],
   outputs: ['count'],
+  standalone: true
 })
 export class MyCounter {
   protected el: HTMLMyCounterElement;

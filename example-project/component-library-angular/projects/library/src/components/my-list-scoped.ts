@@ -17,6 +17,7 @@ import { defineCustomElement as defineMyListScoped } from 'component-library/com
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: [],
+  standalone: true
 })
 export class MyListScoped {
   protected el: HTMLMyListScopedElement;
