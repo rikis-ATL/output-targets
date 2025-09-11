@@ -47,7 +47,7 @@ export interface OutputTargetAngular {
   /**
    * The directory where individual component files should be generated when generateIndividualComponents is true.
    * This can be an absolute path or a path relative to the directivesProxyFile directory.
-   * Defaults to the same directory as directivesProxyFile when not specified.
+   * Defaults to the same directory as directivesProxyFile when not specified (backward compatible).
    */
   componentOutputDir?: string;
 }
