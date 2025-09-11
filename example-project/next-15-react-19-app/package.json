@@ -20,7 +20,7 @@
     "react-dom": "19.0.0"
   },
   "devDependencies": {
-    "@stencil/ssr": "workspace:*",
+    "@rikis-atl/ssr": "workspace:*",
     "@types/mocha": "^10.0.10",
     "@types/node": "^20",
     "@types/react": "^19.1.8",

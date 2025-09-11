@@ -1,5 +1,5 @@
 {
-  "name": "@stencil/ssr",
+  "name": "@rikis-atl/ssr",
   "version": "0.1.1",
   "description": "A package for server-side rendering Stencil components.",
   "author": "Ionic Team",
@@ -7,10 +7,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stenciljs/output-targets.git"
+    "url": "git+https://github.com/rikis-ATL/output-targets.git"
   },
   "bugs": {
-    "url": "https://github.com/stenciljs/output-targets/issues"
+    "url": "https://github.com/rikis-ATL/output-targets/issues"
   },
   "main": "./dist/vite.cjs",
   "module": "./dist/vite.js",

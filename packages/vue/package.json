@@ -1,5 +1,5 @@
 {
-  "name": "@stencil/vue-output-target",
+  "name": "@rikis-atl/vue-output-target",
   "version": "0.11.8",
   "description": "Vue output target for @stencil/core components.",
   "author": "Ionic Team",
@@ -11,10 +11,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stenciljs/output-targets.git"
+    "url": "git+https://github.com/rikis-ATL/output-targets.git"
   },
   "bugs": {
-    "url": "https://github.com/stenciljs/output-targets/issues"
+    "url": "https://github.com/rikis-ATL/output-targets/issues"
   },
   "exports": {
     ".": {
