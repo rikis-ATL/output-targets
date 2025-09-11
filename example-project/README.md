@@ -1,182 +1,89 @@
-# Example Project - Angular Tree Shaking Comparison
+# Example Projects
 
-This directory contains example applications demonstrating the difference between traditional and tree-shakable import patterns for Angular Stencil components.
+This directory contains example applications demonstrating how to use Stencil output targets across different frameworks.
 
-## 🌳 Tree Shaking Import Patterns Comparison
+## 🌳 Angular Tree Shaking Support
 
-### Before Update (Traditional Pattern)
-- **Pattern**: Import from monolithic file
-- **Configuration**: `generateIndividualComponents: false` (default)
-- **Bundle**: All components included regardless of usage
-- **Tree Shaking**: Not supported
+The Angular output target now supports tree shaking to reduce bundle sizes by only including components that are actually imported in your application.
 
-### After Update (Tree Shaking Pattern)  
-- **Pattern**: Import from individual files or main package with tree shaking
-- **Configuration**: `generateIndividualComponents: true`
-- **Bundle**: Only imported components included
-- **Tree Shaking**: Fully supported
+### Configuration
+Enable tree shaking in your Stencil configuration:
 
-## Import Pattern Examples
-
-### Traditional Pattern (Before)
 ```typescript
-// ng-app-old example
-import { MyButton, MyCheckbox, MyInput } from 'component-library-angular';
-// Result: ALL components bundled together (~270KB)
+angularOutputTarget({
+  componentCorePackage: 'component-library',
+  directivesProxyFile: '../component-library-angular/projects/library/src/directives/proxies.ts',
+  directivesArrayFile: '../component-library-angular/projects/library/src/directives/index.ts',
+  generateIndividualComponents: true, // Enable tree shaking
+})
 ```
 
-### Tree Shaking Pattern (After)
-```typescript
-// ng-app-individual example - Option 1 (Recommended)
-import { MyButton } from 'component-library-angular';
-// Result: Only MyButton included in bundle (~136KB)
+### Import Patterns
 
-// Option 2 - Direct file imports
+#### Recommended: Named Imports from Main Package
+```typescript
+import { MyButton, MyInput } from 'component-library-angular';
+// Tree-shakable: Only imported components are included in the bundle
+```
+
+#### Alternative: Direct File Imports
+```typescript
 import { MyButton } from 'component-library-angular/src/directives/my-button';
-// Result: Only MyButton included in bundle (~136KB)
-
-// Option 3 - Mixed imports (gradual migration)
-import { MyButton, MyCheckbox } from 'component-library-angular';
 import { MyInput } from 'component-library-angular/src/directives/my-input';
-// Result: Only imported components included
+// Explicit imports with guaranteed tree shaking
 ```
 
-## Applications
+## Framework Examples
 
-### 🌳 Angular Tree Shaking Examples
-
-- **`ng-app-old/`** - Traditional import pattern (from main package)
-- **`ng-app-individual/`** - Individual import pattern (tree shaking enabled)
-- **`ng-app/`** - Bundle analysis tools and comprehensive testing
-
-### Other Framework Examples
-
+- **`component-library/`** - Core Stencil component library
+- **`component-library-angular/`** - Angular output target with tree shaking support
+- **`component-library-react/`** - React output target example
+- **`component-library-vue/`** - Vue output target example
 - **`react-app/`** - React example application
 - **`vue-app/`** - Vue example application  
 - **`next-app/`** - Next.js example application
-- And more...
+- **`nuxt-app/`** - Nuxt.js example application
 
-## Import Pattern Comparison Table
-
-| Feature | Traditional Pattern | Tree Shaking Pattern |
-|---------|-------------------|---------------------|
-| **Configuration** | `generateIndividualComponents: false` | `generateIndividualComponents: true` |
-| **Import Syntax** | `import { MyButton } from 'library'` | `import { MyButton } from 'library'` ✅ Same! |
-| **Alternative Import** | Not available | `import { MyButton } from 'library/src/directives/my-button'` |
-| **Generated Files** | `proxies.ts` (monolithic) | Individual `.ts` files + `components.ts` |
-| **Bundle Size** | All components included | Only used components |
-| **Tree Shaking** | ❌ Not supported | ✅ Fully supported |
-| **Backward Compatibility** | N/A | ✅ 100% compatible |
-| **Migration Required** | N/A | ❌ No changes needed |
-
-## Use Cases and Recommendations
-
-### When to Use Traditional Pattern
-- ✅ **Small component libraries** (< 10 components)
-- ✅ **Applications using most components** (> 80% usage)
-- ✅ **Prototyping and development** (simplicity preferred)
-- ✅ **Legacy projects** (minimal changes required)
-
-### When to Use Tree Shaking Pattern
-- ✅ **Large component libraries** (20+ components)
-- ✅ **Applications using few components** (< 50% usage)
-- ✅ **Production optimization** (bundle size critical)
-- ✅ **Modern development** (best practices)
-- ✅ **Micro-frontends** (component isolation)
-
-### Migration Scenarios
-
-#### Scenario 1: New Project
-```typescript
-// Recommended approach for new projects
-angularOutputTarget({
-  generateIndividualComponents: true, // Enable from start
-})
-
-// Use standard imports - tree shaking automatic
-import { MyButton, MyInput } from 'component-library-angular';
-```
-
-#### Scenario 2: Existing Project (Zero Changes)
-```typescript
-// Enable tree shaking without changing any imports
-angularOutputTarget({
-  generateIndividualComponents: true, // Just enable this
-})
-
-// Existing imports automatically benefit from tree shaking
-import { MyButton, MyCheckbox } from 'component-library-angular';
-```
-
-#### Scenario 3: Maximum Optimization
-```typescript
-// For applications needing smallest possible bundles
-angularOutputTarget({
-  generateIndividualComponents: true,
-})
-
-// Import only what you need
-import { MyButton } from 'component-library-angular';
-// MyCheckbox, MyInput, etc. completely excluded from bundle
-```
-
-## Quick Comparison
-
-Compare Angular tree shaking effectiveness by running:
-
-```bash
-./compare-angular-bundles.sh
-```
-
-This script builds both Angular apps and shows bundle size differences.
-
-## Individual App Usage
-
-### Traditional Pattern (ng-app-old)
-```bash
-cd ng-app-old
-npm install
-npm start
-```
-Import pattern: `import { MyButton } from 'component-library-angular'`
-
-### Individual Pattern (ng-app-individual)  
-```bash
-cd ng-app-individual
-npm install  
-npm start
-```
-Import pattern: `import { MyButton } from 'component-library-angular/src/directives/my-button'`
-
-## Bundle Analysis
-
-### Tree Shaking Benefits
+## Tree Shaking Benefits
 
 ✅ **Smaller Bundles**: Only used components included  
 ✅ **Better Performance**: Faster loading times  
 ✅ **Scalable**: Benefits increase with library size  
 ✅ **Modern**: Follows current bundling best practices  
+✅ **Backward Compatible**: Existing imports work unchanged
 
-### When You'll See Big Savings
+## Getting Started
 
-- Large component libraries (50+ components)
-- Apps using only a subset of components (10-20%)
-- Production builds with optimization enabled
-- Modern bundlers (webpack 5+, Rollup, esbuild)
+1. **Build the component library:**
+   ```bash
+   cd component-library
+   npm run build
+   ```
 
-## Component Library
+2. **Build the Angular wrapper:**
+   ```bash
+   cd component-library-angular
+   npm run build
+   ```
 
-The example apps use components from:
-- **`component-library/`** - Core Stencil components
-- **`component-library-angular/`** - Angular output target
+3. **Run example applications:**
+   ```bash
+   # React example
+   cd react-app && npm start
+   
+   # Vue example  
+   cd vue-app && npm run dev
+   
+   # Next.js example
+   cd next-app && npm run dev
+   ```
 
-Make sure to build the component library first:
+## Documentation
 
-```bash
-cd component-library
-pnpm build
-```
+For detailed information about tree shaking in Angular, see:
+- **`packages/angular/TREE_SHAKING_GUIDE.md`** - Comprehensive migration guide
+- **`packages/angular/README.md`** - Configuration options and usage
 
 ## Development
 
-Each app can be run independently for development and testing. See individual README files in each app directory for specific instructions.
+Each example can be run independently for development and testing. See individual README files in each directory for specific instructions.
