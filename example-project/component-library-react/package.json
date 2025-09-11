@@ -21,7 +21,7 @@
     "prettier.dry-run": "pnpm run prettier.base --list-different"
   },
   "dependencies": {
-    "@stencil/react-output-target": "workspace:*",
+    "@rikis-atl/react-output-target": "workspace:*",
     "component-library": "workspace:*",
     "react-dom": "^18.3.1"
   },

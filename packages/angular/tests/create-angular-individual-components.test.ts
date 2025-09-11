@@ -58,15 +58,10 @@ describe('createAngularIndividualComponents', () => {
       expect.any(String)
     );
 
-    // Verify components index file was created
+    // Verify components index file was created with both exports
     expect(mockCompilerCtx.fs.writeFile).toHaveBeenCalledWith(
       '/path/to/directives/components.ts',
-      expect.stringContaining("export { MyComponent } from './my-component';")
-    );
-    
-    expect(mockCompilerCtx.fs.writeFile).toHaveBeenCalledWith(
-      '/path/to/directives/components.ts',
-      expect.stringContaining("export { MyOtherComponent } from './my-other-component';")
+      expect.stringMatching(/export { MyComponent } from '\.\/my-component';\s*export { MyOtherComponent } from '\.\/my-other-component';/)
     );
   });
 });
