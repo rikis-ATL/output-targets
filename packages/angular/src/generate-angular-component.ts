@@ -109,8 +109,8 @@ export const createAngularComponentDefinition = (
 
   let standaloneOption = '';
 
-  if (!standalone) {
-    standaloneOption = `\n  standalone: false`;
+  if (standalone) {
+    standaloneOption = `\n  standalone: true`;
   }
 
   const propertyDeclarations = inlineComponentProps.map((m) =>

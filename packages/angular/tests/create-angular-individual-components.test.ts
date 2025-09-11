@@ -69,4 +69,103 @@ describe('createAngularIndividualComponents', () => {
       expect.stringContaining("export { MyOtherComponent } from './my-other-component';")
     );
   });
+
+  it('should create individual component files in custom componentOutputDir', async () => {
+    const mockCompilerCtx = {
+      fs: {
+        writeFile: vi.fn().mockResolvedValue(undefined),
+      },
+    } as any;
+
+    const components = [
+      {
+        tagName: 'my-component',
+        componentClassName: 'MyComponent',
+        events: [],
+        properties: [],
+        methods: [],
+      },
+    ] as any;
+
+    const pkgData = { types: 'dist/types/components.d.ts' };
+    const outputTarget = {
+      directivesProxyFile: '/path/to/directives/proxies.ts',
+      componentCorePackage: 'component-library',
+      customElementsDir: 'components',
+      outputType: 'standalone' as const,
+      generateIndividualComponents: true,
+      componentOutputDir: '/path/to/components', // Custom output directory
+    };
+    const rootDir = '/root';
+
+    await createAngularIndividualComponents(
+      mockCompilerCtx,
+      components,
+      pkgData,
+      outputTarget,
+      rootDir
+    );
+
+    // Verify component was created in custom directory
+    expect(mockCompilerCtx.fs.writeFile).toHaveBeenCalledWith(
+      '/path/to/components/my-component.ts',
+      expect.any(String)
+    );
+
+    // Verify components index file was created in custom directory
+    expect(mockCompilerCtx.fs.writeFile).toHaveBeenCalledWith(
+      '/path/to/components/components.ts',
+      expect.stringContaining("export { MyComponent } from './my-component';")
+    );
+  });
+
+  it('should create individual component files with correct imports when using relative componentOutputDir', async () => {
+    const mockCompilerCtx = {
+      fs: {
+        writeFile: vi.fn().mockResolvedValue(undefined),
+      },
+    } as any;
+
+    const components = [
+      {
+        tagName: 'my-component',
+        componentClassName: 'MyComponent',
+        events: [],
+        properties: [],
+        methods: [],
+      },
+    ] as any;
+
+    const pkgData = { types: 'dist/types/components.d.ts' };
+    const outputTarget = {
+      directivesProxyFile: '/path/to/directives/proxies.ts',
+      componentCorePackage: 'component-library',
+      customElementsDir: 'components',
+      outputType: 'standalone' as const,
+      generateIndividualComponents: true,
+      componentOutputDir: '/path/to/components', // Custom output directory
+    };
+    const rootDir = '/root';
+
+    await createAngularIndividualComponents(
+      mockCompilerCtx,
+      components,
+      pkgData,
+      outputTarget,
+      rootDir
+    );
+
+    // Get the content written to the component file
+    const componentFileCall = mockCompilerCtx.fs.writeFile.mock.calls.find(
+      call => call[0].endsWith('my-component.ts')
+    );
+    expect(componentFileCall).toBeDefined();
+    
+    const componentContent = componentFileCall[1];
+    
+    // Verify the import path is correctly calculated for the angular-component-lib
+    // When generateIndividualComponents is true and componentOutputDir is specified,
+    // angular-component-lib should be copied to the component output directory
+    expect(componentContent).toContain("import { ProxyCmp } from './angular-component-lib/utils';");
+  });
 });

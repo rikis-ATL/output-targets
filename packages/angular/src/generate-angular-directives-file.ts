@@ -1,3 +1,4 @@
+import path from 'path';
 import type { OutputTargetAngular } from './types';
 import { dashToPascalCase, relativeImport } from './utils';
 import type { CompilerCtx, ComponentCompilerMeta } from '@stencil/core/internal';
@@ -17,10 +18,11 @@ export function generateAngularDirectivesFile(
 
   if (outputTarget.generateIndividualComponents) {
     // When using individual components, import each component from its own file
+    const componentOutputPath = outputTarget.componentOutputDir || path.dirname(outputTarget.directivesProxyFile);
     const componentImports = components
       .map((cmpMeta) => {
         const className = dashToPascalCase(cmpMeta.tagName);
-        const componentFile = relativeImport(outputTarget.directivesArrayFile!, `${outputTarget.directivesProxyFile}/../${cmpMeta.tagName}.ts`, '.ts');
+        const componentFile = relativeImport(outputTarget.directivesArrayFile!, `${componentOutputPath}/${cmpMeta.tagName}.ts`, '.ts');
         return `import { ${className} } from '${componentFile}';`;
       })
       .join('\n');

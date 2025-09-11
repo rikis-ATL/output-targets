@@ -40,4 +40,40 @@ describe('normalizeOutputTarget', () => {
 
     expect(results.customElementsDir).toEqual('components');
   });
+
+  it('should normalize absolute componentOutputDir path', () => {
+    const results = normalizeOutputTarget(config, { 
+      directivesProxyFile: '/project/src/directives/proxies.ts',
+      componentOutputDir: '/project/src/components'
+    } as OutputTargetAngular);
+
+    expect(results.componentOutputDir).toEqual('/project/src/components');
+  });
+
+  it('should normalize relative componentOutputDir path', () => {
+    const results = normalizeOutputTarget(config, { 
+      directivesProxyFile: '/project/src/directives/proxies.ts',
+      componentOutputDir: '../components'
+    } as OutputTargetAngular);
+
+    expect(results.componentOutputDir).toEqual('/project/src/components');
+  });
+
+  it('should handle componentOutputDir relative to directivesProxyFile when directivesProxyFile is relative', () => {
+    const results = normalizeOutputTarget(config, { 
+      directivesProxyFile: 'src/directives/proxies.ts',
+      componentOutputDir: '../components'
+    } as OutputTargetAngular);
+
+    expect(results.componentOutputDir).toEqual('/dev/src/components');
+    expect(results.directivesProxyFile).toEqual('/dev/src/directives/proxies.ts');
+  });
+
+  it('should not set componentOutputDir when not provided', () => {
+    const results = normalizeOutputTarget(config, { 
+      directivesProxyFile: '/project/src/directives/proxies.ts'
+    } as OutputTargetAngular);
+
+    expect(results.componentOutputDir).toBeUndefined();
+  });
 });
